@@ -16,7 +16,7 @@ import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
 
-void setupServiceLocator(AppConfig config) {
+Future<void> setupServiceLocator(AppConfig config) async {
   // Config
   getIt.registerSingleton<AppConfig>(config);
 
@@ -33,8 +33,8 @@ void setupServiceLocator(AppConfig config) {
   );
 
   // Local Database
-  getIt.registerLazySingleton<AppDatabase>(
-    () => AppDatabase(getIt<KeyDerivationService>()),
+  getIt.registerSingletonAsync<AppDatabase>(
+    () async => AppDatabase.create(getIt<KeyDerivationService>()),
   );
 
   // External

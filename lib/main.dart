@@ -6,8 +6,9 @@ import 'package:pokemon/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-void mainCommon(AppConfig config) {
-  setupServiceLocator(config);
+Future<void> mainCommon(AppConfig config) async {
+  await setupServiceLocator(config);
+  await getIt.allReady();
   runApp(const MyApp());
 }
 

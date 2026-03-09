@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:pokemon/core/config/app_config.dart';
 import 'package:pokemon/main.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final config = AppConfig(
     baseUrl: 'https://pokeapi.co/api/v2/',
     imageBaseUrl: '',
@@ -9,5 +11,5 @@ void main() {
     environment: AppEnvironment.dev,
     apiKey: '',
   );
-  mainCommon(config);
+  await mainCommon(config);
 }

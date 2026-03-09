@@ -11,27 +11,27 @@ part 'app_database.g.dart';
 
 @DriftDatabase(tables: [Pokemons])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase(KeyDerivationService keyService)
-    : super(_openConnection(keyService));
+  AppDatabase(QueryExecutor e) : super(e);
 
   @override
   int get schemaVersion => 1;
-}
 
-LazyDatabase _openConnection(KeyDerivationService keyService) {
-  return LazyDatabase(() async {
+  /// Asynchronously creates and opens the database using the derived encryption key
+  static Future<AppDatabase> create(KeyDerivationService keyService) async {
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, 'pokemon_app.sqlite'));
 
     // Retrieve the derived secure key mapped to this device
     final encryptionKey = await keyService.getDerivedKey();
 
-    return NativeDatabase.createInBackground(
+    final executor = NativeDatabase.createInBackground(
       file,
       setup: (rawDb) {
         // Use PRAGMA key to encrypt/decrypt the database via sqlcipher
         rawDb.execute("PRAGMA key = '$encryptionKey';");
       },
     );
-  });
+
+    return AppDatabase(executor);
+  }
 }
