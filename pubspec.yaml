@@ -66,6 +66,7 @@ dev_dependencies:
   freezed: ^3.2.4
   json_serializable: ^6.11.4
   mocktail: ^1.0.4
+  drift_dev: ^2.32.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

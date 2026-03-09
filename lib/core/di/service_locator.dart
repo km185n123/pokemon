@@ -1,4 +1,5 @@
 import 'package:pokemon/core/config/app_config.dart';
+import 'package:pokemon/core/database/app_database.dart';
 import 'package:pokemon/core/security/device_service.dart';
 import 'package:pokemon/core/security/encryption_service.dart';
 import 'package:pokemon/core/security/key_derivation.dart';
@@ -29,6 +30,11 @@ void setupServiceLocator(AppConfig config) {
   getIt.registerLazySingleton<KeyDerivationService>(
     () =>
         KeyDerivationService(secureKeyService: getIt(), deviceService: getIt()),
+  );
+
+  // Local Database
+  getIt.registerLazySingleton<AppDatabase>(
+    () => AppDatabase(getIt<KeyDerivationService>()),
   );
 
   // External
