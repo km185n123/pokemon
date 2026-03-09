@@ -15,12 +15,8 @@ class $PokemonsTable extends Pokemons
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
   );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
@@ -31,28 +27,27 @@ class $PokemonsTable extends Pokemons
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  static const VerificationMeta _imageMeta = const VerificationMeta('image');
   @override
-  late final GeneratedColumn<String> url = GeneratedColumn<String>(
-    'url',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
-    'imageUrl',
-  );
-  @override
-  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
-    'image_url',
+  late final GeneratedColumn<String> image = GeneratedColumn<String>(
+    'image',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _typesMeta = const VerificationMeta('types');
   @override
-  List<GeneratedColumn> get $columns => [id, name, url, imageUrl];
+  late final GeneratedColumn<String> types = GeneratedColumn<String>(
+    'types',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, image, types];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -76,18 +71,16 @@ class $PokemonsTable extends Pokemons
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('url')) {
+    if (data.containsKey('image')) {
       context.handle(
-        _urlMeta,
-        url.isAcceptableOrUnknown(data['url']!, _urlMeta),
+        _imageMeta,
+        image.isAcceptableOrUnknown(data['image']!, _imageMeta),
       );
-    } else if (isInserting) {
-      context.missing(_urlMeta);
     }
-    if (data.containsKey('image_url')) {
+    if (data.containsKey('types')) {
       context.handle(
-        _imageUrlMeta,
-        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+        _typesMeta,
+        types.isAcceptableOrUnknown(data['types']!, _typesMeta),
       );
     }
     return context;
@@ -107,14 +100,14 @@ class $PokemonsTable extends Pokemons
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
-      url: attachedDatabase.typeMapping.read(
+      image: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}url'],
-      )!,
-      imageUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}image_url'],
+        data['${effectivePrefix}image'],
       ),
+      types: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}types'],
+      )!,
     );
   }
 
@@ -127,23 +120,23 @@ class $PokemonsTable extends Pokemons
 class PokemonEntity extends DataClass implements Insertable<PokemonEntity> {
   final int id;
   final String name;
-  final String url;
-  final String? imageUrl;
+  final String? image;
+  final String types;
   const PokemonEntity({
     required this.id,
     required this.name,
-    required this.url,
-    this.imageUrl,
+    this.image,
+    required this.types,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
-    map['url'] = Variable<String>(url);
-    if (!nullToAbsent || imageUrl != null) {
-      map['image_url'] = Variable<String>(imageUrl);
+    if (!nullToAbsent || image != null) {
+      map['image'] = Variable<String>(image);
     }
+    map['types'] = Variable<String>(types);
     return map;
   }
 
@@ -151,10 +144,10 @@ class PokemonEntity extends DataClass implements Insertable<PokemonEntity> {
     return PokemonsCompanion(
       id: Value(id),
       name: Value(name),
-      url: Value(url),
-      imageUrl: imageUrl == null && nullToAbsent
+      image: image == null && nullToAbsent
           ? const Value.absent()
-          : Value(imageUrl),
+          : Value(image),
+      types: Value(types),
     );
   }
 
@@ -166,8 +159,8 @@ class PokemonEntity extends DataClass implements Insertable<PokemonEntity> {
     return PokemonEntity(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
-      url: serializer.fromJson<String>(json['url']),
-      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
+      image: serializer.fromJson<String?>(json['image']),
+      types: serializer.fromJson<String>(json['types']),
     );
   }
   @override
@@ -176,28 +169,28 @@ class PokemonEntity extends DataClass implements Insertable<PokemonEntity> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
-      'url': serializer.toJson<String>(url),
-      'imageUrl': serializer.toJson<String?>(imageUrl),
+      'image': serializer.toJson<String?>(image),
+      'types': serializer.toJson<String>(types),
     };
   }
 
   PokemonEntity copyWith({
     int? id,
     String? name,
-    String? url,
-    Value<String?> imageUrl = const Value.absent(),
+    Value<String?> image = const Value.absent(),
+    String? types,
   }) => PokemonEntity(
     id: id ?? this.id,
     name: name ?? this.name,
-    url: url ?? this.url,
-    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
+    image: image.present ? image.value : this.image,
+    types: types ?? this.types,
   );
   PokemonEntity copyWithCompanion(PokemonsCompanion data) {
     return PokemonEntity(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
-      url: data.url.present ? data.url.value : this.url,
-      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      image: data.image.present ? data.image.value : this.image,
+      types: data.types.present ? data.types.value : this.types,
     );
   }
 
@@ -206,67 +199,66 @@ class PokemonEntity extends DataClass implements Insertable<PokemonEntity> {
     return (StringBuffer('PokemonEntity(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('url: $url, ')
-          ..write('imageUrl: $imageUrl')
+          ..write('image: $image, ')
+          ..write('types: $types')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, url, imageUrl);
+  int get hashCode => Object.hash(id, name, image, types);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is PokemonEntity &&
           other.id == this.id &&
           other.name == this.name &&
-          other.url == this.url &&
-          other.imageUrl == this.imageUrl);
+          other.image == this.image &&
+          other.types == this.types);
 }
 
 class PokemonsCompanion extends UpdateCompanion<PokemonEntity> {
   final Value<int> id;
   final Value<String> name;
-  final Value<String> url;
-  final Value<String?> imageUrl;
+  final Value<String?> image;
+  final Value<String> types;
   const PokemonsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
-    this.url = const Value.absent(),
-    this.imageUrl = const Value.absent(),
+    this.image = const Value.absent(),
+    this.types = const Value.absent(),
   });
   PokemonsCompanion.insert({
     this.id = const Value.absent(),
     required String name,
-    required String url,
-    this.imageUrl = const Value.absent(),
-  }) : name = Value(name),
-       url = Value(url);
+    this.image = const Value.absent(),
+    this.types = const Value.absent(),
+  }) : name = Value(name);
   static Insertable<PokemonEntity> custom({
     Expression<int>? id,
     Expression<String>? name,
-    Expression<String>? url,
-    Expression<String>? imageUrl,
+    Expression<String>? image,
+    Expression<String>? types,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
-      if (url != null) 'url': url,
-      if (imageUrl != null) 'image_url': imageUrl,
+      if (image != null) 'image': image,
+      if (types != null) 'types': types,
     });
   }
 
   PokemonsCompanion copyWith({
     Value<int>? id,
     Value<String>? name,
-    Value<String>? url,
-    Value<String?>? imageUrl,
+    Value<String?>? image,
+    Value<String>? types,
   }) {
     return PokemonsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
-      url: url ?? this.url,
-      imageUrl: imageUrl ?? this.imageUrl,
+      image: image ?? this.image,
+      types: types ?? this.types,
     );
   }
 
@@ -279,11 +271,11 @@ class PokemonsCompanion extends UpdateCompanion<PokemonEntity> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (url.present) {
-      map['url'] = Variable<String>(url.value);
+    if (image.present) {
+      map['image'] = Variable<String>(image.value);
     }
-    if (imageUrl.present) {
-      map['image_url'] = Variable<String>(imageUrl.value);
+    if (types.present) {
+      map['types'] = Variable<String>(types.value);
     }
     return map;
   }
@@ -293,8 +285,8 @@ class PokemonsCompanion extends UpdateCompanion<PokemonEntity> {
     return (StringBuffer('PokemonsCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('url: $url, ')
-          ..write('imageUrl: $imageUrl')
+          ..write('image: $image, ')
+          ..write('types: $types')
           ..write(')'))
         .toString();
   }
@@ -315,15 +307,15 @@ typedef $$PokemonsTableCreateCompanionBuilder =
     PokemonsCompanion Function({
       Value<int> id,
       required String name,
-      required String url,
-      Value<String?> imageUrl,
+      Value<String?> image,
+      Value<String> types,
     });
 typedef $$PokemonsTableUpdateCompanionBuilder =
     PokemonsCompanion Function({
       Value<int> id,
       Value<String> name,
-      Value<String> url,
-      Value<String?> imageUrl,
+      Value<String?> image,
+      Value<String> types,
     });
 
 class $$PokemonsTableFilterComposer
@@ -345,13 +337,13 @@ class $$PokemonsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get url => $composableBuilder(
-    column: $table.url,
+  ColumnFilters<String> get image => $composableBuilder(
+    column: $table.image,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get imageUrl => $composableBuilder(
-    column: $table.imageUrl,
+  ColumnFilters<String> get types => $composableBuilder(
+    column: $table.types,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -375,13 +367,13 @@ class $$PokemonsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get url => $composableBuilder(
-    column: $table.url,
+  ColumnOrderings<String> get image => $composableBuilder(
+    column: $table.image,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get imageUrl => $composableBuilder(
-    column: $table.imageUrl,
+  ColumnOrderings<String> get types => $composableBuilder(
+    column: $table.types,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -401,11 +393,11 @@ class $$PokemonsTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<String> get url =>
-      $composableBuilder(column: $table.url, builder: (column) => column);
+  GeneratedColumn<String> get image =>
+      $composableBuilder(column: $table.image, builder: (column) => column);
 
-  GeneratedColumn<String> get imageUrl =>
-      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+  GeneratedColumn<String> get types =>
+      $composableBuilder(column: $table.types, builder: (column) => column);
 }
 
 class $$PokemonsTableTableManager
@@ -441,25 +433,25 @@ class $$PokemonsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<String> url = const Value.absent(),
-                Value<String?> imageUrl = const Value.absent(),
+                Value<String?> image = const Value.absent(),
+                Value<String> types = const Value.absent(),
               }) => PokemonsCompanion(
                 id: id,
                 name: name,
-                url: url,
-                imageUrl: imageUrl,
+                image: image,
+                types: types,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required String name,
-                required String url,
-                Value<String?> imageUrl = const Value.absent(),
+                Value<String?> image = const Value.absent(),
+                Value<String> types = const Value.absent(),
               }) => PokemonsCompanion.insert(
                 id: id,
                 name: name,
-                url: url,
-                imageUrl: imageUrl,
+                image: image,
+                types: types,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

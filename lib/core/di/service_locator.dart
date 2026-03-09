@@ -5,6 +5,7 @@ import 'package:pokemon/core/security/encryption_service.dart';
 import 'package:pokemon/core/security/key_derivation.dart';
 import 'package:pokemon/core/security/secure_key_service.dart';
 import 'package:pokemon/core/security/secure_storage_service.dart';
+import 'package:pokemon/features/landing/data/datasources/pokemon_local_data_source.dart';
 import 'package:pokemon/features/landing/data/datasources/pokemon_remote_data_source.dart';
 import 'package:pokemon/features/landing/data/repositories/pokemon_repository_impl.dart';
 import 'package:pokemon/features/landing/domain/repositories/pokemon_repository.dart';
@@ -35,6 +36,11 @@ Future<void> setupServiceLocator(AppConfig config) async {
   // Local Database
   getIt.registerSingletonAsync<AppDatabase>(
     () async => AppDatabase.create(getIt<KeyDerivationService>()),
+  );
+
+  // Local Data Sources
+  getIt.registerLazySingleton<PokemonLocalDataSource>(
+    () => PokemonLocalDataSourceImpl(database: getIt<AppDatabase>()),
   );
 
   // External
