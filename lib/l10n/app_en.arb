@@ -1,0 +1,11 @@
+{
+  "appTitle": "Pokemon",
+  "searchHint": "Search pokemon...",
+  "description": "Description",
+  "retry": "Retry",
+  "connectionLost": "Connection Lost",
+  "connectionLostMessage": "No internet connection. Please check your network settings.",
+  "serverError": "Something went wrong",
+  "serverErrorMessage": "Server is currently unavailable. Please try again later.",
+  "genericError": "Oops! Something went wrong"
+}

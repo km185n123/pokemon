@@ -1,0 +1,12 @@
+{
+  "@@locale": "es",
+  "appTitle": "Pokemon",
+  "searchHint": "Buscar pokemon...",
+  "description": "Descripción",
+  "retry": "Reintentar",
+  "connectionLost": "Conexión Perdida",
+  "connectionLostMessage": "No hay conexión a internet. Por favor verifica tu red.",
+  "serverError": "Algo salió mal",
+  "serverErrorMessage": "El servidor no está disponible. Intenta más tarde.",
+  "genericError": "¡Ups! Algo salió mal"
+}
