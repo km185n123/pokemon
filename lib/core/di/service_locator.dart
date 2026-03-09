@@ -54,7 +54,7 @@ Future<void> setupServiceLocator(AppConfig config) async {
 
   // Repositories
   getIt.registerLazySingleton<PokemonRepository>(
-    () => PokemonRepositoryImpl(getIt()),
+    () => PokemonRepositoryImpl(getIt(), getIt()),
   );
 
   // Use cases

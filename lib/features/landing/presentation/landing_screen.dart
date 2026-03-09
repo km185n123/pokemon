@@ -7,7 +7,6 @@ import 'package:pokemon/features/landing/presentation/widgets/pokemon_card.dart'
 import 'package:pokemon/features/landing/presentation/widgets/search_bar.dart'
     as custom;
 import 'package:pokemon/core/widgets/text/section_header.dart';
-import 'package:pokemon/features/landing/presentation/widgets/top_bar.dart';
 import 'package:pokemon/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,7 +46,6 @@ class _LandingScreenState extends State<LandingScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            const TopBar(),
             const SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -88,10 +86,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       itemBuilder: (context, index) {
                         if (index == 0) {
                           return Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: SectionHeader(
-                              title: AppLocalizations.of(context)!.appTitle,
-                            ),
+                            padding: const EdgeInsets.only(bottom: 0),
                           );
                         }
 

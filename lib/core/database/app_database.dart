@@ -27,8 +27,34 @@ class AppDatabase extends _$AppDatabase {
     final executor = NativeDatabase.createInBackground(
       file,
       setup: (rawDb) {
-        // Use PRAGMA key to encrypt/decrypt the database via sqlcipher
+        // security: enable sqlcipher pragma settings
+
+        // 1. Unlock the database with the derived key
         rawDb.execute("PRAGMA key = '$encryptionKey';");
+
+        // 2. cipher_memory_security: zeroes memory pages after use to prevent
+        //    sensitive data from lingering in RAM or being exposed via swap
+        rawDb.execute("PRAGMA cipher_memory_security = ON;");
+
+        // 3. cipher_page_size: use 4096 bytes (recommended for SQLCipher 4+)
+        rawDb.execute("PRAGMA cipher_page_size = 4096;");
+
+        // 4. kdf_iter: number of PBKDF2 iterations for key derivation (default 256000)
+        //    Higher = more secure but slower to open
+        rawDb.execute("PRAGMA kdf_iter = 256000;");
+
+        // security: enable db integrity checks
+
+        // 5. Quick integrity check — verifies B-tree structure without decrypting all rows.
+        //    If it fails, the DB may be corrupted or the key is wrong.
+        final integrityResult = rawDb.select("PRAGMA quick_check;");
+        final status = integrityResult.firstOrNull?['quick_check'];
+        if (status != 'ok') {
+          throw StateError(
+            'Database integrity check failed (result: $status). '
+            'The database may be corrupted or the encryption key is invalid.',
+          );
+        }
       },
     );
 
