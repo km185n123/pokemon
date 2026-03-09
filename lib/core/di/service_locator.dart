@@ -1,6 +1,7 @@
 import 'package:pokemon/core/config/app_config.dart';
 import 'package:pokemon/core/security/device_service.dart';
 import 'package:pokemon/core/security/encryption_service.dart';
+import 'package:pokemon/core/security/key_derivation.dart';
 import 'package:pokemon/core/security/secure_key_service.dart';
 import 'package:pokemon/core/security/secure_storage_service.dart';
 import 'package:pokemon/features/landing/data/datasources/pokemon_remote_data_source.dart';
@@ -25,6 +26,10 @@ void setupServiceLocator(AppConfig config) {
     () => const SecureStorageService(),
   );
   getIt.registerLazySingleton<SecureKeyService>(() => const SecureKeyService());
+  getIt.registerLazySingleton<KeyDerivationService>(
+    () =>
+        KeyDerivationService(secureKeyService: getIt(), deviceService: getIt()),
+  );
 
   // External
   getIt.registerLazySingleton<DioClient>(() => DioClient(config: getIt()));
