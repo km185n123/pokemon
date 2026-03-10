@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon/core/config/app_config.dart';
 import 'package:pokemon/main.dart';
+import 'package:pokemon/core/config/env_keys.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final config = AppConfig(
-    baseUrl: 'https://pokeapi.co/api/v2/',
-    imageBaseUrl: '',
-    appName: 'Pokemons Staging',
+    baseUrl: const String.fromEnvironment(EnvKeys.baseUrl),
+    imageBaseUrl: const String.fromEnvironment(EnvKeys.imageBaseUrl),
+    appName: const String.fromEnvironment(EnvKeys.appName),
     environment: AppEnvironment.staging,
-    apiKey: '',
+    apiKey: const String.fromEnvironment(EnvKeys.apiKey),
   );
   await mainCommon(config);
 }
