@@ -39,7 +39,7 @@ class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
       if (currentState.hasReachedMax || currentState.isLoadingMore) return;
 
       emit(currentState.copyWith(isLoadingMore: true));
-      _currentOffset += 20;
+      _currentOffset += 5;
 
       final result = await getPokemons(_currentOffset);
       result.fold(

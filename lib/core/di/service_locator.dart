@@ -1,3 +1,5 @@
+import 'package:pokemon/core/base/cache_handler.dart';
+import 'package:pokemon/core/base/network_bound_resource.dart';
 import 'package:pokemon/core/config/app_config.dart';
 import 'package:pokemon/core/database/app_database.dart';
 import 'package:pokemon/core/security/device_service.dart';
@@ -52,9 +54,12 @@ Future<void> setupServiceLocator(AppConfig config) async {
     () => PokemonRemoteDataSourceImpl(dio: getIt()),
   );
 
+  // Cache handler
+  getIt.registerLazySingleton<CacheHandler>(() => NetworkBoundResource());
+
   // Repositories
   getIt.registerLazySingleton<PokemonRepository>(
-    () => PokemonRepositoryImpl(getIt(), getIt()),
+    () => PokemonRepositoryImpl(getIt(), getIt(), getIt()),
   );
 
   // Use cases

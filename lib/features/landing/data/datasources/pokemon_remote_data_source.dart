@@ -18,7 +18,7 @@ class PokemonRemoteDataSourceImpl implements PokemonRemoteDataSource {
   Future<PokemonListResponseDto> getPokemons(int offset) async {
     final response = await dio.get(
       '/pokemon',
-      queryParameters: {'offset': offset, 'limit': 20},
+      queryParameters: {'offset': offset, 'limit': 5},
     );
 
     if (response.statusCode != 200) {

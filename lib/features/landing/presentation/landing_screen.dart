@@ -6,7 +6,7 @@ import 'package:pokemon/features/landing/presentation/bloc/pokemons_state.dart';
 import 'package:pokemon/features/landing/presentation/widgets/pokemon_card.dart';
 import 'package:pokemon/features/landing/presentation/widgets/search_bar.dart'
     as custom;
-import 'package:pokemon/core/widgets/text/section_header.dart';
+
 import 'package:pokemon/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
