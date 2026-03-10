@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "pokemon (dev)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_dev.dart",
+            "toolArgs": [
+                "--dart-define-from-file",
+                ".env.dev"
+            ]
+        },
+        {
+            "name": "pokemon (staging)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_staging.dart",
+            "toolArgs": [
+                "--dart-define-from-file",
+                ".env.staging"
+            ]
+        },
+        {
+            "name": "pokemon (prod)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_prod.dart",
+            "toolArgs": [
+                "--dart-define-from-file",
+                ".env.prod"
+            ]
+        }
+    ]
+}

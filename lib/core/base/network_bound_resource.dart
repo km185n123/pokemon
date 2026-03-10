@@ -1,23 +1,29 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pokemon/core/base/cache_handler.dart';
 import '../error/failure.dart';
-import '../error/failure_mapper.dart';
 
 class NetworkBoundResource implements CacheHandler {
   @override
   Future<Either<Failure, T>> run<T>({
-    required Future<T> Function() remote,
+    required Future<Either<Failure, T>> Function() remote,
     required Future<void> Function(T data) saveCache,
     required Future<T?> Function() readCache,
+    bool returnCacheOnError = true,
   }) async {
-    try {
-      final result = await remote();
-      await saveCache(result);
-      return Right(result);
-    } catch (error) {
-      final cached = await readCache();
-      if (cached != null) return Right(cached);
-      return Left(FailureMapper.map(error));
-    }
+    final result = await remote();
+
+    return result.fold(
+      (failure) async {
+        if (returnCacheOnError) {
+          final cached = await readCache();
+          if (cached != null) return Right(cached);
+        }
+        return Left(failure);
+      },
+      (data) async {
+        await saveCache(data);
+        return Right(data);
+      },
+    );
   }
 }

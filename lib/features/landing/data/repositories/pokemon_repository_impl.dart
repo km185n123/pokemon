@@ -24,16 +24,32 @@ class PokemonRepositoryImpl implements PokemonRepository {
   Future<Either<Failure, List<Pokemon>>> getPokemons([int offset = 0]) {
     return cacheHandler.run(
       remote: () async {
-        final list = await remoteDataSource.getPokemons(offset);
+        final listEither = await remoteDataSource.getPokemons(offset);
 
-        final futures = list.results.map(
-          (e) => remoteDataSource.getPokemonDetail(e.url),
-        );
+        return listEither.fold((failure) => Left(failure), (list) async {
+          final futures = list.results.map(
+            (e) => remoteDataSource.getPokemonDetail(e.url),
+          );
 
-        final details = await Future.wait(futures);
+          final detailsEither = await Future.wait(futures);
 
-        return details.map((e) => e.toEntity()).toList();
+          final List<Pokemon> pokemons = [];
+          for (final detail in detailsEither) {
+            if (detail.isLeft()) {
+              return Left(
+                detail.fold(
+                  (failure) => failure,
+                  (_) => const ServerFailure('Unknown error'),
+                ),
+              );
+            }
+            detail.match((l) => null, (r) => pokemons.add(r.toEntity()));
+          }
+
+          return Right(pokemons);
+        });
       },
+      returnCacheOnError: offset == 0,
       saveCache: (data) async {
         await localDataSource.clearCache();
         await localDataSource.cachePokemons(data);
