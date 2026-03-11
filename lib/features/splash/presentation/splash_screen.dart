@@ -1,3 +1,4 @@
+import 'package:pokemon/core/config/app_config.dart';
 import 'package:pokemon/core/router/app_routes.dart';
 import 'package:pokemon/core/di/service_locator.dart';
 import 'package:pokemon/core/services/local_preferences_service.dart';
@@ -16,7 +17,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 4), () {
+    final splashDuration = getIt<AppConfig>().splashDuration;
+    Future.delayed(Duration(seconds: splashDuration), () {
       if (mounted) {
         final hasSeenTutorial =
             getIt<LocalPreferencesService>().hasSeenTutorial;

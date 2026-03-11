@@ -39,7 +39,15 @@ class PokemonCardImages extends StatelessWidget {
           child: Hero(
             tag: '${heroContext}_pokemon_$id',
             child: imageUrl.isNotEmpty
-                ? Image.network(imageUrl, fit: BoxFit.contain)
+                ? Image.network(
+                    imageUrl,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => const Icon(
+                      Icons.image_not_supported,
+                      size: 50,
+                      color: Colors.white54,
+                    ),
+                  )
                 : const Icon(
                     Icons.image_not_supported,
                     size: 50,

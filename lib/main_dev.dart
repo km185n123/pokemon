@@ -11,6 +11,10 @@ void main() async {
     appName: const String.fromEnvironment(EnvKeys.appName),
     environment: AppEnvironment.dev,
     apiKey: const String.fromEnvironment(EnvKeys.apiKey),
+    splashDuration: const int.fromEnvironment(
+      EnvKeys.splashDuration,
+      defaultValue: 4,
+    ),
   );
   await mainCommon(config);
 }

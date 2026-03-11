@@ -6,6 +6,7 @@ class AppConfig {
   final String apiKey;
   final String imageBaseUrl;
   final AppEnvironment environment;
+  final int splashDuration;
 
   AppConfig({
     required this.baseUrl,
@@ -13,5 +14,6 @@ class AppConfig {
     required this.apiKey,
     required this.imageBaseUrl,
     required this.environment,
+    this.splashDuration = 4,
   });
 }

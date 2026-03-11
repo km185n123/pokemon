@@ -71,9 +71,7 @@ class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
       final result = await getPokemons(_currentOffset);
       result.fold(
         (failure) {
-          // You might want to handle error without losing current list,
-          // but for simplicity, just remove loading indicator
-          emit(currentState.copyWith(isLoadingMore: false));
+          emit(PokemonsError(failure));
         },
         (pokemons) {
           if (pokemons.isEmpty) {
