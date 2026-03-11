@@ -3,6 +3,7 @@ import 'package:pokemon/features/landing/domain/usecases/add_favorite_pokemon.da
 import 'package:pokemon/features/landing/domain/usecases/delete_favorite_pokemon.dart';
 import 'package:pokemon/core/router/app_routes.dart';
 import 'package:pokemon/features/landing/domain/entities/pokemon.dart';
+import 'package:pokemon/core/widgets/chips/pokemon_type_badge.dart';
 import 'package:pokemon/features/landing/presentation/widgets/pokemon_color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -168,7 +169,7 @@ class _PokemonCardState extends State<PokemonCard> {
                   const Spacer(),
                   Row(
                     children: widget.pokemon.types
-                        .map((type) => _buildTypeChip(type))
+                        .map((type) => PokemonTypeBadge(type: type))
                         .toList(),
                   ),
                 ],
@@ -205,42 +206,6 @@ class _PokemonCardState extends State<PokemonCard> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildTypeChip(String type) {
-    final color = PokemonColorUtils.getDarkerColorByType(type);
-    final icon = PokemonColorUtils.getIconByType(type);
-
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(2),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, size: 10, color: color),
-          ),
-          const SizedBox(width: 4),
-          Text(
-            type[0].toUpperCase() + type.substring(1).toLowerCase(),
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
       ),
     );
   }
