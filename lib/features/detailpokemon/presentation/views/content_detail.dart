@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon/features/detailpokemon/domain/entities/pokemon_detail.dart';
-import 'package:pokemon/features/detailpokemon/presentation/widgets/detail_title_section.dart';
-import 'package:pokemon/features/detailpokemon/presentation/widgets/detail_description.dart';
-import 'package:pokemon/features/detailpokemon/presentation/widgets/detail_stats_grid.dart';
-import 'package:pokemon/features/detailpokemon/presentation/widgets/detail_gender_bar.dart';
-import 'package:pokemon/features/detailpokemon/presentation/widgets/detail_weaknesses_section.dart';
+import 'package:pokemon/features/detailpokemon/presentation/views/detail_title_section.dart';
+import 'package:pokemon/features/detailpokemon/presentation/widgets/description.dart';
+import 'package:pokemon/features/detailpokemon/presentation/views/detail_stats_grid_section.dart';
+import 'package:pokemon/features/detailpokemon/presentation/widgets/gender_bar.dart';
+import 'package:pokemon/features/detailpokemon/presentation/views/detail_weaknesses_section.dart';
 
 class ContentDetail extends StatelessWidget {
   final PokemonDetail detail;
@@ -28,14 +28,13 @@ class ContentDetail extends StatelessWidget {
           children: [
             DetailTitleSection(pokemon: detail),
             const SizedBox(height: 24),
-            DetailDescription(detail: detail),
+            Description(detail: detail),
             const SizedBox(height: 24),
-            DetailStatsGrid(detail: detail),
+            DetailStatsGridSection(detail: detail),
             const SizedBox(height: 24),
-            DetailGenderBar(detail: detail),
+            GenderBar(detail: detail),
             const SizedBox(height: 24),
             DetailWeaknessesSection(detail: detail),
-            // Adding extra bottom padding for scrolling
             const SizedBox(height: 60),
           ],
         ),

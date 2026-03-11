@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pokemon/features/detailpokemon/domain/entities/pokemon_detail.dart';
 import 'package:pokemon/l10n/app_localizations.dart';
 
-class DetailDescription extends StatelessWidget {
+class Description extends StatelessWidget {
   final PokemonDetail detail;
 
-  const DetailDescription({super.key, required this.detail});
+  const Description({super.key, required this.detail});
 
   @override
   Widget build(BuildContext context) {

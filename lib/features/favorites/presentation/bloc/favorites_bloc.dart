@@ -38,14 +38,11 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     FavoritesDeleted event,
     Emitter<FavoritesState> emit,
   ) async {
-    // Delete from db
     final result = await deleteFavoritePokemon(event.pokemon);
 
-    // Refresh list if successful to show updated UI
     await result.fold(
-      (failure) async =>
-          emit(FavoritesError(failure)), // Error state if it fails
-      (_) async => add(FavoritesStarted()), // Reload favorites
+      (failure) async => emit(FavoritesError(failure)),
+      (_) async => add(FavoritesStarted()),
     );
   }
 }

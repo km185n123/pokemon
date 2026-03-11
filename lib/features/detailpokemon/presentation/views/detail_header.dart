@@ -1,3 +1,4 @@
+import 'package:pokemon/features/detailpokemon/presentation/utils/header_clipper.dart';
 import 'package:pokemon/features/landing/domain/entities/pokemon.dart';
 import 'package:pokemon/core/theme/pokemon_color_utils.dart';
 import 'package:flutter/material.dart';
@@ -30,26 +31,23 @@ class DetailHeader extends StatelessWidget {
       height: screenHeight * 0.45,
       child: Stack(
         children: [
-          // Curved background
           ClipPath(
-            clipper: _HeaderClipper(),
+            clipper: HeaderClipper(),
             child: Container(
               height: screenHeight * 0.4,
               color: backgroundColor,
             ),
           ),
-          // Watermark / leaf / pokeball behind image
           Positioned(
             top: MediaQuery.of(context).padding.top + 40,
             left: 0,
             right: 0,
             child: Icon(
-              Icons.energy_savings_leaf, // Placeholder for leaf watermark
+              Icons.energy_savings_leaf,
               size: 250,
               color: Colors.white.withValues(alpha: 0.2),
             ),
           ),
-          // Pokemon Image
           Positioned(
             bottom: 0,
             left: 0,
@@ -69,7 +67,6 @@ class DetailHeader extends StatelessWidget {
                     ),
             ),
           ),
-          // Navigation controls
           Positioned(
             top: MediaQuery.of(context).padding.top + 10,
             left: 16,
@@ -103,29 +100,4 @@ class DetailHeader extends StatelessWidget {
       ),
     );
   }
-}
-
-class _HeaderClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.lineTo(0, size.height - 60);
-
-    final controlPoint = Offset(size.width / 2, size.height + 60);
-    final endpoint = Offset(size.width, size.height - 60);
-
-    path.quadraticBezierTo(
-      controlPoint.dx,
-      controlPoint.dy,
-      endpoint.dx,
-      endpoint.dy,
-    );
-
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

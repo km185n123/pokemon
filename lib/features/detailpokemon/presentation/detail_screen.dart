@@ -5,8 +5,8 @@ import 'package:pokemon/core/di/service_locator.dart';
 import 'package:pokemon/features/detailpokemon/presentation/cubit/pokemon_detail_cubit.dart';
 import 'package:pokemon/features/detailpokemon/presentation/cubit/pokemon_detail_state.dart';
 import 'package:pokemon/features/landing/domain/entities/pokemon.dart';
-import 'package:pokemon/features/detailpokemon/presentation/widgets/detail_header.dart';
-import 'package:pokemon/features/detailpokemon/presentation/widgets/content_detail.dart';
+import 'package:pokemon/features/detailpokemon/presentation/views/detail_header.dart';
+import 'package:pokemon/features/detailpokemon/presentation/views/content_detail.dart';
 
 class DetailScreen extends StatelessWidget {
   final Pokemon pokemon;
@@ -27,7 +27,6 @@ class DetailScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         body: Stack(
           children: [
-            // Contains the scrollable content including the white card overlaid on the header
             CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
@@ -38,7 +37,6 @@ class DetailScreen extends StatelessWidget {
                   ),
                 ),
                 SliverToBoxAdapter(
-                  // Negative translation to visually overlap the rounded white card over the header
                   child: Transform.translate(
                     offset: const Offset(0, -40),
                     child: BlocBuilder<PokemonDetailCubit, PokemonDetailState>(

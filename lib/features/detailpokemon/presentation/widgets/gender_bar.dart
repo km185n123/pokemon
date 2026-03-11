@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:pokemon/features/detailpokemon/domain/entities/pokemon_detail.dart';
 
-class DetailGenderBar extends StatelessWidget {
+class GenderBar extends StatelessWidget {
   final PokemonDetail detail;
 
-  const DetailGenderBar({super.key, required this.detail});
+  const GenderBar({super.key, required this.detail});
 
   @override
   Widget build(BuildContext context) {
-    // If the pokemon is genderless:
     if (detail.malePercentage == 0 && detail.femalePercentage == 0) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,

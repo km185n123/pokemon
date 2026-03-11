@@ -3,6 +3,7 @@ class Constants {
 
   static const String logo = "assets/anim/pokebola.json";
   static const String comingSoon = "assets/images/coming_soon.png";
+  static const String fishEmpty = "assets/images/fish_empty.png";
   static const String offlineDbKey = 'offline_db_enabled';
   // Map backend types to Spanish labels for the UI
   static const Map<String, String> typeTranslations = {

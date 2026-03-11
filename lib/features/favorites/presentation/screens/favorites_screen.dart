@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokemon/core/di/service_locator.dart';
 import 'package:pokemon/core/events/tab_event_bus.dart';
-import 'package:pokemon/core/widgets/feedback/illustration_feedback.dart';
 import 'package:pokemon/features/favorites/presentation/bloc/favorites_bloc.dart';
 import 'package:pokemon/features/favorites/presentation/bloc/favorites_event.dart';
 import 'package:pokemon/features/favorites/presentation/bloc/favorites_state.dart';
-import 'package:pokemon/core/widgets/cards/pokemon_card.dart';
 import 'package:pokemon/core/widgets/cards/favorite_cubit.dart';
 import 'package:pokemon/core/widgets/cards/favorite_state.dart';
+import 'package:pokemon/features/favorites/presentation/widgets/favorites_empty_view.dart';
+import 'package:pokemon/features/favorites/presentation/widgets/favorites_list.dart';
 import 'package:pokemon/l10n/app_localizations.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -70,63 +70,19 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           },
           child: BlocBuilder<FavoritesBloc, FavoritesState>(
             builder: (context, state) {
-              if (state is FavoritesLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is FavoritesError) {
-                return Center(child: Text(state.failure.message));
-              } else if (state is FavoritesEmpty) {
-                return Center(
-                  child: IllustrationFeedback(
-                    imageAsset: 'assets/images/fish_empty.png',
-                    title: l10n.favoritesEmpty,
-                    subtitle: l10n.favoritesEmptySubtitle,
-                  ),
-                );
-              } else if (state is FavoritesLoaded) {
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 16,
-                  ),
-                  itemCount: state.pokemons.length,
-                  itemBuilder: (context, index) {
-                    final pokemon = state.pokemons[index];
-                    return Dismissible(
-                      key: Key(pokemon.id.toString()),
-                      direction: DismissDirection.endToStart,
-                      onDismissed: (direction) {
-                        context.read<FavoriteCubit>().toggleFavorite(pokemon);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              l10n.favoritesRemovedSnackbar(pokemon.name),
-                            ),
-                          ),
-                        );
-                      },
-                      background: Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: const Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                          size: 32,
-                        ),
-                      ),
-                      child: PokemonCard(
-                        pokemon: pokemon,
-                        heroContext: 'favorites',
-                      ),
-                    );
-                  },
-                );
-              }
-              return const SizedBox.shrink();
+              return switch (state) {
+                FavoritesLoading() => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                FavoritesError(:final failure) => Center(
+                  child: Text(failure.message),
+                ),
+                FavoritesEmpty() => const FavoritesEmptyView(),
+                FavoritesLoaded(:final pokemons) => FavoritesList(
+                  pokemons: pokemons,
+                ),
+                _ => const SizedBox.shrink(),
+              };
             },
           ),
         ),
