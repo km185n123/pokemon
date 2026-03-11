@@ -16,7 +16,7 @@ class SplashContent extends StatelessWidget {
           children: [
             Spacer(),
             LogoSplash(),
-            SizedBox(height: 24),
+            SizedBox(height: 4),
             TitleSplash(),
             Spacer(),
             ProgressBar(),
