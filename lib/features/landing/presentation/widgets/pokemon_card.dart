@@ -200,12 +200,8 @@ class _PokemonCardState extends State<PokemonCard> {
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: isFavorite
-                          ? Colors.white
-                          : Colors.white.withValues(alpha: 0.3),
-                      border: isFavorite
-                          ? Border.all(color: Colors.grey.shade300, width: 2)
-                          : null,
+                      color: Colors.black.withValues(alpha: 0.2),
+                      border: Border.all(color: Colors.white, width: 2),
                     ),
                     child: Icon(
                       isFavorite ? Icons.favorite : Icons.favorite_border,
