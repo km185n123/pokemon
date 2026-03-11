@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon/features/landing/presentation/widgets/pokemon_color_utils.dart';
+import 'package:pokemon/core/theme/pokemon_color_utils.dart';
 
 class PokemonTypeBadge extends StatelessWidget {
   final String type;

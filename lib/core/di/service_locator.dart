@@ -10,6 +10,7 @@ import 'package:pokemon/core/security/encryption_service.dart';
 import 'package:pokemon/core/security/key_derivation.dart';
 import 'package:pokemon/core/security/secure_key_service.dart';
 import 'package:pokemon/core/security/secure_storage_service.dart';
+import 'package:pokemon/core/widgets/cards/favorite_cubit.dart';
 import 'package:pokemon/features/landing/data/datasources/pokemon_local_data_source.dart';
 import 'package:pokemon/features/landing/data/datasources/pokemon_remote_data_source.dart';
 import 'package:pokemon/features/landing/data/repositories/pokemon_repository_impl.dart';
@@ -30,6 +31,14 @@ final getIt = GetIt.instance;
 Future<void> setupServiceLocator(AppConfig config) async {
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerLazySingleton(() => LocalPreferencesService(sharedPreferences));
+
+  getIt.registerLazySingleton(
+    () => FavoriteCubit(
+      getIt<AddFavoritePokemon>(),
+      getIt<DeleteFavoritePokemon>(),
+      getIt<GetFavoritePokemons>(),
+    )..loadFavorites(),
+  );
 
   // Global Events
   getIt.registerLazySingleton<TabEventBus>(() => TabEventBus());

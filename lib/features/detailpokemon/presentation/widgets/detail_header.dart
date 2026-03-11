@@ -1,11 +1,12 @@
 import 'package:pokemon/features/landing/domain/entities/pokemon.dart';
-import 'package:pokemon/features/landing/presentation/widgets/pokemon_color_utils.dart';
-import 'package:pokemon/features/landing/domain/usecases/add_favorite_pokemon.dart';
-import 'package:pokemon/features/landing/domain/usecases/delete_favorite_pokemon.dart';
-import 'package:pokemon/core/di/service_locator.dart';
+import 'package:pokemon/core/theme/pokemon_color_utils.dart';
 import 'package:flutter/material.dart';
 
-class DetailHeader extends StatefulWidget {
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pokemon/core/widgets/cards/favorite_cubit.dart';
+import 'package:pokemon/core/widgets/cards/favorite_state.dart';
+
+class DetailHeader extends StatelessWidget {
   final Pokemon pokemon;
   final String heroContext;
   final VoidCallback onBack;
@@ -18,49 +19,10 @@ class DetailHeader extends StatefulWidget {
   });
 
   @override
-  State<DetailHeader> createState() => _DetailHeaderState();
-}
-
-class _DetailHeaderState extends State<DetailHeader> {
-  late bool isFavorite;
-
-  @override
-  void initState() {
-    super.initState();
-    isFavorite = widget.pokemon.isFavorite;
-  }
-
-  void _toggleFavorite() async {
-    setState(() {
-      isFavorite = !isFavorite;
-    });
-
-    if (isFavorite) {
-      final updatedPokemon = Pokemon(
-        id: widget.pokemon.id,
-        name: widget.pokemon.name,
-        image: widget.pokemon.image,
-        types: widget.pokemon.types,
-        isFavorite: true,
-      );
-      await getIt<AddFavoritePokemon>().call(updatedPokemon);
-    } else {
-      final updatedPokemon = Pokemon(
-        id: widget.pokemon.id,
-        name: widget.pokemon.name,
-        image: widget.pokemon.image,
-        types: widget.pokemon.types,
-        isFavorite: false,
-      );
-      await getIt<DeleteFavoritePokemon>().call(updatedPokemon);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
-    final primaryType = widget.pokemon.types.isNotEmpty
-        ? widget.pokemon.types.first
+    final primaryType = pokemon.types.isNotEmpty
+        ? pokemon.types.first
         : 'normal';
     final backgroundColor = PokemonColorUtils.getColorByType(primaryType);
 
@@ -93,10 +55,10 @@ class _DetailHeaderState extends State<DetailHeader> {
             left: 0,
             right: 0,
             child: Hero(
-              tag: '${widget.heroContext}_pokemon_${widget.pokemon.id}',
-              child: widget.pokemon.image.isNotEmpty
+              tag: '${heroContext}_pokemon_${pokemon.id}',
+              child: pokemon.image.isNotEmpty
                   ? Image.network(
-                      widget.pokemon.image,
+                      pokemon.image,
                       height: 220,
                       fit: BoxFit.contain,
                     )
@@ -116,16 +78,23 @@ class _DetailHeaderState extends State<DetailHeader> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  onTap: widget.onBack,
+                  onTap: onBack,
                   child: const Icon(Icons.arrow_back_ios, color: Colors.white),
                 ),
-                GestureDetector(
-                  onTap: _toggleFavorite,
-                  child: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: Colors.white,
-                    size: 28,
-                  ),
+                BlocSelector<FavoriteCubit, FavoriteState, bool>(
+                  selector: (state) => state.isFavorite(pokemon.id),
+                  builder: (context, isFavorite) {
+                    return GestureDetector(
+                      onTap: () {
+                        context.read<FavoriteCubit>().toggleFavorite(pokemon);
+                      },
+                      child: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

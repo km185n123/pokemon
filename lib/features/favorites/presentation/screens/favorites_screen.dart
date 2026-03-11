@@ -7,7 +7,9 @@ import 'package:pokemon/core/widgets/feedback/illustration_feedback.dart';
 import 'package:pokemon/features/favorites/presentation/bloc/favorites_bloc.dart';
 import 'package:pokemon/features/favorites/presentation/bloc/favorites_event.dart';
 import 'package:pokemon/features/favorites/presentation/bloc/favorites_state.dart';
-import 'package:pokemon/features/landing/presentation/widgets/pokemon_card.dart';
+import 'package:pokemon/core/widgets/cards/pokemon_card.dart';
+import 'package:pokemon/core/widgets/cards/favorite_cubit.dart';
+import 'package:pokemon/core/widgets/cards/favorite_state.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -59,72 +61,72 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           ),
           centerTitle: true,
         ),
-        body: BlocBuilder<FavoritesBloc, FavoritesState>(
-          builder: (context, state) {
-            if (state is FavoritesLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is FavoritesError) {
-              return Center(child: Text(state.failure.message));
-            } else if (state is FavoritesEmpty) {
-              return const Center(
-                child: IllustrationFeedback(
-                  imageAsset: 'assets/images/fish_empty.png',
-                  title: 'No has marcado ningún\nPokémon como favorito',
-                  subtitle:
-                      'Haz clic en el ícono de corazón de tus\nPokémon favoritos y aparecerán aquí.',
-                ),
-              );
-            } else if (state is FavoritesLoaded) {
-              return ListView.builder(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 16,
-                ),
-                itemCount: state.pokemons.length,
-                itemBuilder: (context, index) {
-                  final pokemon = state.pokemons[index];
-                  return Dismissible(
-                    key: Key(pokemon.id.toString()),
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (direction) {
-                      context.read<FavoritesBloc>().add(
-                        FavoritesDeleted(pokemon),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            '${pokemon.name} eliminado de favoritos',
-                          ),
-                        ),
-                      );
-                    },
-                    background: Container(
-                      margin: const EdgeInsets.only(bottom: 16),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: const Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                        size: 32,
-                      ),
-                    ),
-                    child: PokemonCard(
-                      pokemon: pokemon,
-                      heroContext: 'favorites',
-                      onFavoriteToggled: () {
-                        context.read<FavoritesBloc>().add(FavoritesStarted());
-                      },
-                    ),
-                  );
-                },
-              );
-            }
-            return const SizedBox.shrink();
+        body: BlocListener<FavoriteCubit, FavoriteState>(
+          listener: (context, state) {
+            _favoritesBloc.add(FavoritesStarted());
           },
+          child: BlocBuilder<FavoritesBloc, FavoritesState>(
+            builder: (context, state) {
+              if (state is FavoritesLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is FavoritesError) {
+                return Center(child: Text(state.failure.message));
+              } else if (state is FavoritesEmpty) {
+                return const Center(
+                  child: IllustrationFeedback(
+                    imageAsset: 'assets/images/fish_empty.png',
+                    title: 'No has marcado ningún\nPokémon como favorito',
+                    subtitle:
+                        'Haz clic en el ícono de corazón de tus\nPokémon favoritos y aparecerán aquí.',
+                  ),
+                );
+              } else if (state is FavoritesLoaded) {
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                  itemCount: state.pokemons.length,
+                  itemBuilder: (context, index) {
+                    final pokemon = state.pokemons[index];
+                    return Dismissible(
+                      key: Key(pokemon.id.toString()),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) {
+                        context.read<FavoriteCubit>().toggleFavorite(pokemon);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '${pokemon.name} eliminado de favoritos',
+                            ),
+                          ),
+                        );
+                      },
+                      background: Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                          size: 32,
+                        ),
+                      ),
+                      child: PokemonCard(
+                        pokemon: pokemon,
+                        heroContext: 'favorites',
+                      ),
+                    );
+                  },
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
         ),
       ),
     );

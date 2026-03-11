@@ -3,7 +3,7 @@ import 'package:pokemon/features/landing/presentation/bloc/pokemons_bloc.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_event.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_state.dart';
 import 'package:pokemon/features/filters/presentation/widgets/filter_bottom_sheet.dart';
-import 'package:pokemon/features/landing/presentation/widgets/pokemon_search_button.dart';
+import 'package:pokemon/features/landing/presentation/widgets/pokemon_search_by_filter_button.dart';
 import 'package:pokemon/features/landing/presentation/widgets/pokemon_search_field.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +16,7 @@ class SearchBar extends StatelessWidget {
       children: [
         const PokemonSearchField(),
         const SizedBox(width: 12),
-        PokemonSearchButton(
+        PokemonSearchByFilterButton(
           onPressed: () {
             final bloc = context.read<PokemonsBloc>();
             final currentState = bloc.state;

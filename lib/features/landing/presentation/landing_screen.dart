@@ -6,7 +6,7 @@ import 'package:pokemon/core/widgets/feedback/feedback_message.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_bloc.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_event.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_state.dart';
-import 'package:pokemon/features/landing/presentation/widgets/pokemon_card.dart';
+import 'package:pokemon/core/widgets/cards/pokemon_card.dart';
 import 'package:pokemon/features/landing/presentation/widgets/search_bar.dart'
     as custom;
 
