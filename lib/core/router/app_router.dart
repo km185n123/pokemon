@@ -4,6 +4,7 @@ import 'package:pokemon/features/landing/presentation/bloc/pokemons_bloc.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_event.dart';
 import 'package:pokemon/features/landing/presentation/landing_screen.dart';
 import 'package:pokemon/features/splash/presentation/splash_screen.dart';
+import 'package:pokemon/features/tutorial/presentation/screens/tutorial_screen.dart';
 import 'package:pokemon/features/main_navigation/presentation/screens/main_navigation_screen.dart';
 import 'package:pokemon/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:pokemon/features/regions/presentation/screens/regions_screen.dart';
@@ -19,6 +20,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.splash,
       builder: (context, state) => const SplashScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.tutorial,
+      builder: (context, state) => const TutorialScreen(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {

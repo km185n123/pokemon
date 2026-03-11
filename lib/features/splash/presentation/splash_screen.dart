@@ -1,4 +1,6 @@
 import 'package:pokemon/core/router/app_routes.dart';
+import 'package:pokemon/core/di/service_locator.dart';
+import 'package:pokemon/core/services/local_preferences_service.dart';
 import 'package:pokemon/features/splash/presentation/widgets/splash_content.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -16,7 +18,13 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        context.go(AppRoutes.landing);
+        final hasSeenTutorial =
+            getIt<LocalPreferencesService>().hasSeenTutorial;
+        if (hasSeenTutorial) {
+          context.go(AppRoutes.landing);
+        } else {
+          context.go(AppRoutes.tutorial);
+        }
       }
     });
   }

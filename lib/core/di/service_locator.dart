@@ -22,10 +22,15 @@ import 'package:pokemon/core/network/dio_client.dart';
 import 'package:pokemon/core/events/tab_event_bus.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_bloc.dart';
 import 'package:pokemon/features/favorites/presentation/bloc/favorites_bloc.dart';
+import 'package:pokemon/core/services/local_preferences_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
 Future<void> setupServiceLocator(AppConfig config) async {
+  final sharedPreferences = await SharedPreferences.getInstance();
+  getIt.registerLazySingleton(() => LocalPreferencesService(sharedPreferences));
+
   // Global Events
   getIt.registerLazySingleton<TabEventBus>(() => TabEventBus());
 
