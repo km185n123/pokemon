@@ -6,8 +6,13 @@ import 'package:pokemon/features/detailpokemon/presentation/widgets/content_deta
 
 class DetailScreen extends StatelessWidget {
   final Pokemon pokemon;
+  final String heroContext;
 
-  const DetailScreen({super.key, required this.pokemon});
+  const DetailScreen({
+    super.key,
+    required this.pokemon,
+    required this.heroContext,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +26,7 @@ class DetailScreen extends StatelessWidget {
               SliverToBoxAdapter(
                 child: DetailHeader(
                   pokemon: pokemon,
+                  heroContext: heroContext,
                   onBack: () => context.pop(),
                 ),
               ),

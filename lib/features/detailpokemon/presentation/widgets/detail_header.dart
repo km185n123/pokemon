@@ -7,9 +7,15 @@ import 'package:flutter/material.dart';
 
 class DetailHeader extends StatefulWidget {
   final Pokemon pokemon;
+  final String heroContext;
   final VoidCallback onBack;
 
-  const DetailHeader({super.key, required this.pokemon, required this.onBack});
+  const DetailHeader({
+    super.key,
+    required this.pokemon,
+    required this.heroContext,
+    required this.onBack,
+  });
 
   @override
   State<DetailHeader> createState() => _DetailHeaderState();
@@ -87,7 +93,7 @@ class _DetailHeaderState extends State<DetailHeader> {
             left: 0,
             right: 0,
             child: Hero(
-              tag: 'pokemon_${widget.pokemon.id}',
+              tag: '${widget.heroContext}_pokemon_${widget.pokemon.id}',
               child: widget.pokemon.image.isNotEmpty
                   ? Image.network(
                       widget.pokemon.image,

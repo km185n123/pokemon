@@ -66,8 +66,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.detail,
       builder: (context, state) {
-        final pokemon = state.extra as Pokemon;
-        return DetailScreen(pokemon: pokemon);
+        final Map<String, dynamic> extra = state.extra as Map<String, dynamic>;
+        final pokemon = extra['pokemon'] as Pokemon;
+        final heroContext = extra['heroContext'] as String;
+        return DetailScreen(pokemon: pokemon, heroContext: heroContext);
       },
     ),
   ],

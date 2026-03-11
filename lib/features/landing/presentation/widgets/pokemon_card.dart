@@ -11,8 +11,14 @@ import 'package:go_router/go_router.dart';
 class PokemonCard extends StatefulWidget {
   final Pokemon pokemon;
   final VoidCallback? onFavoriteToggled;
+  final String heroContext;
 
-  const PokemonCard({super.key, required this.pokemon, this.onFavoriteToggled});
+  const PokemonCard({
+    super.key,
+    required this.pokemon,
+    this.onFavoriteToggled,
+    this.heroContext = 'landing',
+  });
 
   @override
   State<PokemonCard> createState() => _PokemonCardState();
@@ -80,7 +86,16 @@ class _PokemonCardState extends State<PokemonCard> {
     final darkerColor = PokemonColorUtils.getDarkerColorByType(primaryType);
 
     return GestureDetector(
-      onTap: () => context.push(AppRoutes.detail, extra: widget.pokemon),
+      onTap: () async {
+        await context.push(
+          AppRoutes.detail,
+          extra: {'pokemon': widget.pokemon, 'heroContext': widget.heroContext},
+        );
+        // Cuando regresamos de la pantalla de detalle,
+        // disparamos el callback para que la lista (Landing o Favoritos)
+        // se refresque y aplique cualquier cambio que se haya hecho en los favs.
+        widget.onFavoriteToggled?.call();
+      },
       child: Container(
         height: 140,
         margin: const EdgeInsets.only(bottom: 16),
@@ -131,7 +146,7 @@ class _PokemonCardState extends State<PokemonCard> {
               top: 8,
               width: 100,
               child: Hero(
-                tag: 'pokemon_${widget.pokemon.id}',
+                tag: '${widget.heroContext}_pokemon_${widget.pokemon.id}',
                 child: widget.pokemon.image.isNotEmpty
                     ? Image.network(widget.pokemon.image, fit: BoxFit.contain)
                     : const Icon(

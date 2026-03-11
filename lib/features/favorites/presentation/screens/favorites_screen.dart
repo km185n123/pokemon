@@ -114,6 +114,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     ),
                     child: PokemonCard(
                       pokemon: pokemon,
+                      heroContext: 'favorites',
                       onFavoriteToggled: () {
                         context.read<FavoritesBloc>().add(FavoritesStarted());
                       },
