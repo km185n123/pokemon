@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:pokemon/core/di/service_locator.dart';
 import 'package:pokemon/core/events/tab_event_bus.dart';
+import 'package:pokemon/core/network/network_bloc.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_bloc.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_event.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_state.dart';
@@ -20,6 +21,7 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   final ScrollController _scrollController = ScrollController();
   late StreamSubscription<int> _tabSubscription;
+  NetworkStatus _previousNetworkStatus = NetworkStatus.initial;
 
   @override
   void initState() {
@@ -49,31 +51,41 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 24),
-            const LandingSearchHeader(),
-            const SizedBox(height: 32),
-            Expanded(
-              child: BlocBuilder<PokemonsBloc, PokemonsState>(
-                builder: (context, state) {
-                  if (state is PokemonsLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is PokemonsError) {
-                    return LandingErrorView(failure: state.failure);
-                  } else if (state is PokemonsLoaded) {
-                    return LandingPokemonList(
-                      scrollController: _scrollController,
-                      state: state,
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
+    return BlocListener<NetworkBloc, NetworkStatus>(
+      listener: (context, status) {
+        // Auto-recovery: if we were offline and now online, refetch
+        if (_previousNetworkStatus == NetworkStatus.offline &&
+            status == NetworkStatus.online) {
+          context.read<PokemonsBloc>().add(PokemonsStarted());
+        }
+        _previousNetworkStatus = status;
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              const SizedBox(height: 24),
+              const LandingSearchHeader(),
+              const SizedBox(height: 32),
+              Expanded(
+                child: BlocBuilder<PokemonsBloc, PokemonsState>(
+                  builder: (context, state) {
+                    if (state is PokemonsLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is PokemonsError) {
+                      return LandingErrorView(failure: state.failure);
+                    } else if (state is PokemonsLoaded) {
+                      return LandingPokemonList(
+                        scrollController: _scrollController,
+                        state: state,
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

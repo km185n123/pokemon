@@ -10,23 +10,30 @@ import 'package:pokemon/features/landing/domain/repositories/pokemon_repository.
 import 'package:pokemon/features/landing/data/mappers/pokemon_mapper.dart';
 import 'package:pokemon/features/landing/data/mappers/pokemon_detail_mapper.dart';
 import 'package:pokemon/features/detailpokemon/domain/entities/pokemon_detail.dart';
+import 'package:pokemon/features/profile/data/repositories/profile_repository_impl.dart';
 
 class PokemonRepositoryImpl implements PokemonRepository {
   final PokemonRemoteService remoteService;
   final PokemonFavoriteService favoriteService;
   final PokemonLocalDataSource localDataSource;
   final CacheHandler cacheHandler;
+  final ProfileRepository profileRepository;
 
   PokemonRepositoryImpl(
     this.remoteService,
     this.favoriteService,
     this.localDataSource,
     this.cacheHandler,
+    this.profileRepository,
   );
 
   @override
-  Future<Either<Failure, List<Pokemon>>> getPokemons([int offset = 0]) {
+  Future<Either<Failure, List<Pokemon>>> getPokemons([int offset = 0]) async {
+    final offlineDbEnabled = await profileRepository.getOfflineDbEnabled();
+    final skipCache = !offlineDbEnabled;
+
     return cacheHandler.run(
+      skipCache: skipCache,
       remote: () async {
         return remoteService
             .fetchPokemonList(offset)

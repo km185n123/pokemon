@@ -9,19 +9,22 @@ class NetworkBoundResource implements CacheHandler {
     required Future<void> Function(T data) saveCache,
     required Future<T?> Function() readCache,
     bool returnCacheOnError = true,
+    bool skipCache = false,
   }) async {
     final result = await remote();
 
     return result.fold(
       (failure) async {
-        if (returnCacheOnError) {
+        if (returnCacheOnError && !skipCache) {
           final cached = await readCache();
           if (cached != null) return Right(cached);
         }
         return Left(failure);
       },
       (data) async {
-        await saveCache(data);
+        if (!skipCache) {
+          await saveCache(data);
+        }
         return Right(data);
       },
     );

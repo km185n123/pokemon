@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokemon/core/widgets/cards/favorite_cubit.dart';
+import 'package:pokemon/core/network/network_bloc.dart';
+import 'package:pokemon/core/widgets/global_network_banner.dart';
 
 Future<void> mainCommon(AppConfig config) async {
   await setupServiceLocator(config);
@@ -19,14 +21,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<FavoriteCubit>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => getIt<FavoriteCubit>()),
+        BlocProvider(create: (_) => getIt<NetworkBloc>()),
+      ],
       child: MaterialApp.router(
         title: 'Flutter Demo',
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
         routerConfig: appRouter,
+        builder: (context, child) {
+          return GlobalNetworkBanner(child: child!);
+        },
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,

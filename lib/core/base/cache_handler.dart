@@ -7,5 +7,6 @@ abstract class CacheHandler {
     required Future<void> Function(T data) saveCache,
     required Future<T?> Function() readCache,
     bool returnCacheOnError = true,
+    bool skipCache = false,
   });
 }

@@ -13,6 +13,7 @@ import 'package:pokemon/core/di/service_locator.dart';
 import 'package:pokemon/core/router/app_routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pokemon/features/profile/presentation/cubit/profile_cubit.dart';
 
 final appRouter = GoRouter(
   initialLocation: AppRoutes.splash,
@@ -62,7 +63,10 @@ final appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.profile,
-              builder: (context, state) => const ProfileScreen(),
+              builder: (context, state) => BlocProvider(
+                create: (_) => getIt<ProfileCubit>(),
+                child: const ProfileScreen(),
+              ),
             ),
           ],
         ),

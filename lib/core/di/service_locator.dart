@@ -1,3 +1,5 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:pokemon/core/base/cache_handler.dart';
 import 'package:pokemon/core/base/network_bound_resource.dart';
 import 'package:pokemon/core/config/app_config.dart';
@@ -5,6 +7,7 @@ import 'package:pokemon/core/database/app_database.dart';
 import 'package:pokemon/core/network/api_client.dart';
 import 'package:pokemon/core/network/clienthttp/dio_http_engine.dart';
 import 'package:pokemon/core/network/clienthttp/http_engine.dart';
+import 'package:pokemon/core/network/network_info.dart';
 import 'package:pokemon/core/security/device_service.dart';
 import 'package:pokemon/core/security/encryption_service.dart';
 import 'package:pokemon/core/security/key_derivation.dart';
@@ -17,6 +20,8 @@ import 'package:pokemon/features/landing/data/services/pokemon_remote_service.da
 import 'package:pokemon/features/landing/data/services/pokemon_favorite_service.dart';
 import 'package:pokemon/features/landing/data/repositories/pokemon_repository_impl.dart';
 import 'package:pokemon/features/landing/domain/repositories/pokemon_repository.dart';
+import 'package:pokemon/features/profile/data/repositories/profile_repository_impl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pokemon/features/landing/domain/usecases/get_pokemons.dart';
 import 'package:pokemon/features/landing/domain/usecases/add_favorite_pokemon.dart';
 import 'package:pokemon/features/landing/domain/usecases/delete_favorite_pokemon.dart';
@@ -26,10 +31,11 @@ import 'package:pokemon/core/events/tab_event_bus.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_bloc.dart';
 import 'package:pokemon/features/favorites/presentation/bloc/favorites_bloc.dart';
 import 'package:pokemon/core/services/local_preferences_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pokemon/features/detailpokemon/domain/usecases/get_pokemon_detail.dart';
 import 'package:pokemon/features/detailpokemon/presentation/cubit/pokemon_detail_cubit.dart';
+import 'package:pokemon/core/network/network_bloc.dart';
+import 'package:pokemon/features/profile/presentation/cubit/profile_cubit.dart';
 
 final getIt = GetIt.instance;
 Future<void> setupServiceLocator(AppConfig config) async {
@@ -70,7 +76,29 @@ Future<void> setupServiceLocator(AppConfig config) async {
     () async => AppDatabase.create(getIt<KeyDerivationService>()),
   );
 
+  getIt.registerSingletonAsync<SharedPreferences>(
+    () async => await SharedPreferences.getInstance(),
+  );
+
+  getIt.registerSingletonAsync<ProfileRepository>(
+    () async =>
+        ProfileRepositoryImpl(await getIt.getAsync<SharedPreferences>()),
+    dependsOn: [SharedPreferences],
+  );
+
   // Network
+  getIt.registerLazySingleton<Connectivity>(() => Connectivity());
+  getIt.registerLazySingleton<InternetConnectionChecker>(
+    () => InternetConnectionChecker.createInstance(),
+  );
+
+  getIt.registerLazySingleton<NetworkInfo>(
+    () => NetworkInfoImpl(
+      getIt<Connectivity>(),
+      getIt<InternetConnectionChecker>(),
+    ),
+  );
+
   getIt.registerLazySingleton<DioClient>(
     () => DioClient(config: getIt<AppConfig>()),
   );
@@ -109,6 +137,7 @@ Future<void> setupServiceLocator(AppConfig config) async {
       getIt<PokemonFavoriteService>(),
       getIt<PokemonLocalDataSource>(),
       getIt<CacheHandler>(),
+      getIt<ProfileRepository>(),
     ),
   );
 
@@ -130,6 +159,8 @@ Future<void> setupServiceLocator(AppConfig config) async {
     ),
   );
   getIt.registerFactory(() => PokemonDetailCubit(getIt()));
+  getIt.registerFactory(() => ProfileCubit(getIt()));
+  getIt.registerLazySingleton(() => NetworkBloc(getIt<NetworkInfo>()));
 
   await getIt.allReady();
 }
