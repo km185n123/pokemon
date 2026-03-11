@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'package:pokemon/core/di/service_locator.dart';
+import 'package:pokemon/core/events/tab_event_bus.dart';
 import 'package:pokemon/core/error/failure.dart';
 import 'package:pokemon/core/widgets/feedback/feedback_message.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_bloc.dart';
@@ -20,15 +23,23 @@ class LandingScreen extends StatefulWidget {
 
 class _LandingScreenState extends State<LandingScreen> {
   final ScrollController _scrollController = ScrollController();
+  late StreamSubscription<int> _tabSubscription;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+
+    _tabSubscription = getIt<TabEventBus>().tabStream.listen((index) {
+      if (index == 0 && mounted) {
+        context.read<PokemonsBloc>().add(PokemonsRefreshFavorites());
+      }
+    });
   }
 
   @override
   void dispose() {
+    _tabSubscription.cancel();
     _scrollController.dispose();
     super.dispose();
   }
@@ -98,7 +109,14 @@ class _LandingScreenState extends State<LandingScreen> {
                         }
 
                         final pokemon = state.pokemons[index - 1];
-                        return PokemonCard(pokemon: pokemon);
+                        return PokemonCard(
+                          pokemon: pokemon,
+                          onFavoriteToggled: () {
+                            context.read<PokemonsBloc>().add(
+                              PokemonsRefreshFavorites(),
+                            );
+                          },
+                        );
                       },
                     );
                   }

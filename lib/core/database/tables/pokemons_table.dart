@@ -7,6 +7,7 @@ class Pokemons extends Table {
   TextColumn get image => text().nullable()();
   // types stored as comma-separated string, e.g. "fire,water"
   TextColumn get types => text().withDefault(const Constant(''))();
+  BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
 
   @override
   Set<Column> get primaryKey => {id};

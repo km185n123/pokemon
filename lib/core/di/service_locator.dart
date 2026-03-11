@@ -15,12 +15,20 @@ import 'package:pokemon/features/landing/data/datasources/pokemon_remote_data_so
 import 'package:pokemon/features/landing/data/repositories/pokemon_repository_impl.dart';
 import 'package:pokemon/features/landing/domain/repositories/pokemon_repository.dart';
 import 'package:pokemon/features/landing/domain/usecases/get_pokemons.dart';
+import 'package:pokemon/features/landing/domain/usecases/add_favorite_pokemon.dart';
+import 'package:pokemon/features/landing/domain/usecases/delete_favorite_pokemon.dart';
+import 'package:pokemon/features/landing/domain/usecases/get_favorite_pokemons.dart';
 import 'package:pokemon/core/network/dio_client.dart';
+import 'package:pokemon/core/events/tab_event_bus.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_bloc.dart';
+import 'package:pokemon/features/favorites/presentation/bloc/favorites_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
 Future<void> setupServiceLocator(AppConfig config) async {
+  // Global Events
+  getIt.registerLazySingleton<TabEventBus>(() => TabEventBus());
+
   // Config
   getIt.registerSingleton<AppConfig>(config);
 
@@ -76,13 +84,22 @@ Future<void> setupServiceLocator(AppConfig config) async {
     ),
   );
 
-  // Use cases
-  getIt.registerLazySingleton<GetPokemons>(
-    () => GetPokemons(getIt<PokemonRepository>()),
-  );
+  // Usecases
+  getIt.registerLazySingleton(() => GetPokemons(getIt()));
+  getIt.registerLazySingleton(() => AddFavoritePokemon(getIt()));
+  getIt.registerLazySingleton(() => DeleteFavoritePokemon(getIt()));
+  getIt.registerLazySingleton(() => GetFavoritePokemons(getIt()));
 
-  // Bloc
-  getIt.registerFactory<PokemonsBloc>(() => PokemonsBloc(getIt<GetPokemons>()));
+  // Blocs
+  getIt.registerFactory(
+    () => PokemonsBloc(getPokemons: getIt(), getFavoritePokemons: getIt()),
+  );
+  getIt.registerFactory(
+    () => FavoritesBloc(
+      getFavoritePokemons: getIt(),
+      deleteFavoritePokemon: getIt(),
+    ),
+  );
 
   await getIt.allReady();
 }

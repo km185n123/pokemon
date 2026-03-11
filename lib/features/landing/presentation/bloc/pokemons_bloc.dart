@@ -1,20 +1,24 @@
 import 'dart:async';
 import 'package:pokemon/features/landing/domain/entities/pokemon.dart';
 import 'package:pokemon/features/landing/domain/usecases/get_pokemons.dart';
+import 'package:pokemon/features/landing/domain/usecases/get_favorite_pokemons.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_event.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
   final GetPokemons getPokemons;
+  final GetFavoritePokemons getFavoritePokemons;
 
   List<Pokemon> _allPokemons = [];
   int _currentOffset = 0;
 
-  PokemonsBloc(this.getPokemons) : super(PokemonsInitial()) {
+  PokemonsBloc({required this.getPokemons, required this.getFavoritePokemons})
+    : super(PokemonsInitial()) {
     on<PokemonsStarted>(_onStarted);
     on<PokemonsLoadMore>(_onLoadMore);
     on<PokemonsSearch>(_onSearch);
+    on<PokemonsRefreshFavorites>(_onRefreshFavorites);
   }
 
   Future<void> _onStarted(
@@ -84,5 +88,44 @@ class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
         .toList();
 
     emit(PokemonsLoaded(filteredPokemons));
+  }
+
+  Future<void> _onRefreshFavorites(
+    PokemonsRefreshFavorites event,
+    Emitter<PokemonsState> emit,
+  ) async {
+    if (state is! PokemonsLoaded) return;
+    final currentState = state as PokemonsLoaded;
+
+    final result = await getFavoritePokemons();
+    result.fold(
+      (failure) => null, // Ignore cache failures on silent refresh
+      (favorites) {
+        final favoriteIds = favorites.map((p) => p.id).toSet();
+
+        _allPokemons = _allPokemons.map((pokemon) {
+          final isFav = favoriteIds.contains(pokemon.id);
+          if (pokemon.isFavorite != isFav) {
+            return Pokemon(
+              id: pokemon.id,
+              name: pokemon.name,
+              image: pokemon.image,
+              types: pokemon.types,
+              isFavorite: isFav,
+            );
+          }
+          return pokemon;
+        }).toList();
+
+        // Re-emit either the full list or filtered if currently searching
+        emit(
+          PokemonsLoaded(
+            _allPokemons,
+            hasReachedMax: currentState.hasReachedMax,
+            isLoadingMore: currentState.isLoadingMore,
+          ),
+        );
+      },
+    );
   }
 }

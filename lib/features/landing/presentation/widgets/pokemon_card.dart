@@ -1,25 +1,85 @@
+import 'package:pokemon/core/di/service_locator.dart';
+import 'package:pokemon/features/landing/domain/usecases/add_favorite_pokemon.dart';
+import 'package:pokemon/features/landing/domain/usecases/delete_favorite_pokemon.dart';
 import 'package:pokemon/core/router/app_routes.dart';
 import 'package:pokemon/features/landing/domain/entities/pokemon.dart';
 import 'package:pokemon/features/landing/presentation/widgets/pokemon_color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class PokemonCard extends StatelessWidget {
+class PokemonCard extends StatefulWidget {
   final Pokemon pokemon;
+  final VoidCallback? onFavoriteToggled;
 
-  const PokemonCard({super.key, required this.pokemon});
+  const PokemonCard({super.key, required this.pokemon, this.onFavoriteToggled});
+
+  @override
+  State<PokemonCard> createState() => _PokemonCardState();
+}
+
+class _PokemonCardState extends State<PokemonCard> {
+  late bool isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+    isFavorite = widget.pokemon.isFavorite;
+  }
+
+  @override
+  void didUpdateWidget(PokemonCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.pokemon.isFavorite != oldWidget.pokemon.isFavorite) {
+      isFavorite = widget.pokemon.isFavorite;
+    }
+  }
+
+  void _toggleFavorite() async {
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+
+    if (isFavorite) {
+      final updatedPokemon = Pokemon(
+        id: widget.pokemon.id,
+        name: widget.pokemon.name,
+        image: widget.pokemon.image,
+        types: widget.pokemon.types,
+        isFavorite: true,
+      );
+      await getIt<AddFavoritePokemon>().call(updatedPokemon);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${widget.pokemon.name} guardado en favoritos'),
+          ),
+        );
+      }
+    } else {
+      final updatedPokemon = Pokemon(
+        id: widget.pokemon.id,
+        name: widget.pokemon.name,
+        image: widget.pokemon.image,
+        types: widget.pokemon.types,
+        isFavorite: false,
+      );
+      await getIt<DeleteFavoritePokemon>().call(updatedPokemon);
+    }
+
+    widget.onFavoriteToggled?.call();
+  }
 
   @override
   Widget build(BuildContext context) {
     // Default to 'normal' type if list is empty
-    final primaryType = pokemon.types.isNotEmpty
-        ? pokemon.types.first
+    final primaryType = widget.pokemon.types.isNotEmpty
+        ? widget.pokemon.types.first
         : 'normal';
     final backgroundColor = PokemonColorUtils.getColorByType(primaryType);
     final darkerColor = PokemonColorUtils.getDarkerColorByType(primaryType);
 
     return GestureDetector(
-      onTap: () => context.push(AppRoutes.detail, extra: pokemon),
+      onTap: () => context.push(AppRoutes.detail, extra: widget.pokemon),
       child: Container(
         height: 140,
         margin: const EdgeInsets.only(bottom: 16),
@@ -63,23 +123,6 @@ class PokemonCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Favorite Icon
-            Positioned(
-              top: 12,
-              right: 12,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.3),
-                ),
-                child: const Icon(
-                  Icons.favorite_border,
-                  color: Colors.white,
-                  size: 20,
-                ),
-              ),
-            ),
             // Pokemon Image
             Positioned(
               right: 16,
@@ -87,9 +130,9 @@ class PokemonCard extends StatelessWidget {
               top: 8,
               width: 100,
               child: Hero(
-                tag: 'pokemon_${pokemon.id}',
-                child: pokemon.image.isNotEmpty
-                    ? Image.network(pokemon.image, fit: BoxFit.contain)
+                tag: 'pokemon_${widget.pokemon.id}',
+                child: widget.pokemon.image.isNotEmpty
+                    ? Image.network(widget.pokemon.image, fit: BoxFit.contain)
                     : const Icon(
                         Icons.image_not_supported,
                         size: 50,
@@ -104,7 +147,7 @@ class PokemonCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Nº${pokemon.id.toString().padLeft(3, '0')}',
+                    'Nº${widget.pokemon.id.toString().padLeft(3, '0')}',
                     style: const TextStyle(
                       color: Colors.black54,
                       fontWeight: FontWeight.bold,
@@ -113,8 +156,8 @@ class PokemonCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    pokemon.name[0].toUpperCase() +
-                        pokemon.name.substring(1).toLowerCase(),
+                    widget.pokemon.name[0].toUpperCase() +
+                        widget.pokemon.name.substring(1).toLowerCase(),
                     style: const TextStyle(
                       color: Colors.black87,
                       fontSize: 22,
@@ -124,11 +167,40 @@ class PokemonCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   Row(
-                    children: pokemon.types
+                    children: widget.pokemon.types
                         .map((type) => _buildTypeChip(type))
                         .toList(),
                   ),
                 ],
+              ),
+            ),
+            // Favorite Icon (Placing it last to be on top layer with a big touch target)
+            Positioned(
+              top: 0,
+              right: 0,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: _toggleFavorite,
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isFavorite
+                          ? Colors.white
+                          : Colors.white.withValues(alpha: 0.3),
+                      border: isFavorite
+                          ? Border.all(color: Colors.grey.shade300, width: 2)
+                          : null,
+                    ),
+                    child: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite ? Colors.red : Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                ),
               ),
             ),
           ],

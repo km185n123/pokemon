@@ -46,12 +46,29 @@ class PokemonRepositoryImpl implements PokemonRepository {
             detail.match((l) => null, (r) => pokemons.add(r.toEntity()));
           }
 
-          return Right(pokemons);
+          final favoritesList = await localDataSource.getFavoritePokemons();
+          final favoriteIds = favoritesList.map((p) => p.id).toSet();
+
+          final mergedPokemons = pokemons
+              .map(
+                (p) => Pokemon(
+                  id: p.id,
+                  name: p.name,
+                  image: p.image,
+                  types: p.types,
+                  isFavorite: favoriteIds.contains(p.id),
+                ),
+              )
+              .toList();
+
+          return Right(mergedPokemons);
         });
       },
       returnCacheOnError: offset == 0,
       saveCache: (data) async {
-        await localDataSource.clearCache();
+        if (offset == 0) {
+          await localDataSource.clearCache();
+        }
         await localDataSource.cachePokemons(data);
       },
       readCache: () async {
@@ -59,5 +76,35 @@ class PokemonRepositoryImpl implements PokemonRepository {
         return cached.isEmpty ? null : cached;
       },
     );
+  }
+
+  @override
+  Future<Either<Failure, void>> addFavorite(Pokemon pokemon) async {
+    try {
+      await localDataSource.addFavorite(pokemon);
+      return const Right(null);
+    } catch (e) {
+      return Left(CacheFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteFavorite(Pokemon pokemon) async {
+    try {
+      await localDataSource.deleteFavorite(pokemon);
+      return const Right(null);
+    } catch (e) {
+      return Left(CacheFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Pokemon>>> getFavoritePokemons() async {
+    try {
+      final pokemons = await localDataSource.getFavoritePokemons();
+      return Right(pokemons);
+    } catch (e) {
+      return Left(CacheFailure(e.toString()));
+    }
   }
 }

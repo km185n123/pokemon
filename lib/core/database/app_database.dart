@@ -14,7 +14,24 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(QueryExecutor e) : super(e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (Migrator m) async {
+        await m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        if (from == 1) {
+          await m.addColumn(pokemons, pokemons.isFavorite);
+        }
+      },
+      beforeOpen: (details) async {
+        // ... (can enable foreign keys if needed)
+      },
+    );
+  }
 
   /// Asynchronously creates and opens the database using the derived encryption key
   static Future<AppDatabase> create(KeyDerivationService keyService) async {

@@ -46,8 +46,23 @@ class $PokemonsTable extends Pokemons
     requiredDuringInsert: false,
     defaultValue: const Constant(''),
   );
+  static const VerificationMeta _isFavoriteMeta = const VerificationMeta(
+    'isFavorite',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, name, image, types];
+  late final GeneratedColumn<bool> isFavorite = GeneratedColumn<bool>(
+    'is_favorite',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_favorite" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, image, types, isFavorite];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -83,6 +98,12 @@ class $PokemonsTable extends Pokemons
         types.isAcceptableOrUnknown(data['types']!, _typesMeta),
       );
     }
+    if (data.containsKey('is_favorite')) {
+      context.handle(
+        _isFavoriteMeta,
+        isFavorite.isAcceptableOrUnknown(data['is_favorite']!, _isFavoriteMeta),
+      );
+    }
     return context;
   }
 
@@ -108,6 +129,10 @@ class $PokemonsTable extends Pokemons
         DriftSqlType.string,
         data['${effectivePrefix}types'],
       )!,
+      isFavorite: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_favorite'],
+      )!,
     );
   }
 
@@ -122,11 +147,13 @@ class PokemonEntity extends DataClass implements Insertable<PokemonEntity> {
   final String name;
   final String? image;
   final String types;
+  final bool isFavorite;
   const PokemonEntity({
     required this.id,
     required this.name,
     this.image,
     required this.types,
+    required this.isFavorite,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -137,6 +164,7 @@ class PokemonEntity extends DataClass implements Insertable<PokemonEntity> {
       map['image'] = Variable<String>(image);
     }
     map['types'] = Variable<String>(types);
+    map['is_favorite'] = Variable<bool>(isFavorite);
     return map;
   }
 
@@ -148,6 +176,7 @@ class PokemonEntity extends DataClass implements Insertable<PokemonEntity> {
           ? const Value.absent()
           : Value(image),
       types: Value(types),
+      isFavorite: Value(isFavorite),
     );
   }
 
@@ -161,6 +190,7 @@ class PokemonEntity extends DataClass implements Insertable<PokemonEntity> {
       name: serializer.fromJson<String>(json['name']),
       image: serializer.fromJson<String?>(json['image']),
       types: serializer.fromJson<String>(json['types']),
+      isFavorite: serializer.fromJson<bool>(json['isFavorite']),
     );
   }
   @override
@@ -171,6 +201,7 @@ class PokemonEntity extends DataClass implements Insertable<PokemonEntity> {
       'name': serializer.toJson<String>(name),
       'image': serializer.toJson<String?>(image),
       'types': serializer.toJson<String>(types),
+      'isFavorite': serializer.toJson<bool>(isFavorite),
     };
   }
 
@@ -179,11 +210,13 @@ class PokemonEntity extends DataClass implements Insertable<PokemonEntity> {
     String? name,
     Value<String?> image = const Value.absent(),
     String? types,
+    bool? isFavorite,
   }) => PokemonEntity(
     id: id ?? this.id,
     name: name ?? this.name,
     image: image.present ? image.value : this.image,
     types: types ?? this.types,
+    isFavorite: isFavorite ?? this.isFavorite,
   );
   PokemonEntity copyWithCompanion(PokemonsCompanion data) {
     return PokemonEntity(
@@ -191,6 +224,9 @@ class PokemonEntity extends DataClass implements Insertable<PokemonEntity> {
       name: data.name.present ? data.name.value : this.name,
       image: data.image.present ? data.image.value : this.image,
       types: data.types.present ? data.types.value : this.types,
+      isFavorite: data.isFavorite.present
+          ? data.isFavorite.value
+          : this.isFavorite,
     );
   }
 
@@ -200,13 +236,14 @@ class PokemonEntity extends DataClass implements Insertable<PokemonEntity> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('image: $image, ')
-          ..write('types: $types')
+          ..write('types: $types, ')
+          ..write('isFavorite: $isFavorite')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, image, types);
+  int get hashCode => Object.hash(id, name, image, types, isFavorite);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -214,7 +251,8 @@ class PokemonEntity extends DataClass implements Insertable<PokemonEntity> {
           other.id == this.id &&
           other.name == this.name &&
           other.image == this.image &&
-          other.types == this.types);
+          other.types == this.types &&
+          other.isFavorite == this.isFavorite);
 }
 
 class PokemonsCompanion extends UpdateCompanion<PokemonEntity> {
@@ -222,29 +260,34 @@ class PokemonsCompanion extends UpdateCompanion<PokemonEntity> {
   final Value<String> name;
   final Value<String?> image;
   final Value<String> types;
+  final Value<bool> isFavorite;
   const PokemonsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.image = const Value.absent(),
     this.types = const Value.absent(),
+    this.isFavorite = const Value.absent(),
   });
   PokemonsCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     this.image = const Value.absent(),
     this.types = const Value.absent(),
+    this.isFavorite = const Value.absent(),
   }) : name = Value(name);
   static Insertable<PokemonEntity> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? image,
     Expression<String>? types,
+    Expression<bool>? isFavorite,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (image != null) 'image': image,
       if (types != null) 'types': types,
+      if (isFavorite != null) 'is_favorite': isFavorite,
     });
   }
 
@@ -253,12 +296,14 @@ class PokemonsCompanion extends UpdateCompanion<PokemonEntity> {
     Value<String>? name,
     Value<String?>? image,
     Value<String>? types,
+    Value<bool>? isFavorite,
   }) {
     return PokemonsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       image: image ?? this.image,
       types: types ?? this.types,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 
@@ -277,6 +322,9 @@ class PokemonsCompanion extends UpdateCompanion<PokemonEntity> {
     if (types.present) {
       map['types'] = Variable<String>(types.value);
     }
+    if (isFavorite.present) {
+      map['is_favorite'] = Variable<bool>(isFavorite.value);
+    }
     return map;
   }
 
@@ -286,7 +334,8 @@ class PokemonsCompanion extends UpdateCompanion<PokemonEntity> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('image: $image, ')
-          ..write('types: $types')
+          ..write('types: $types, ')
+          ..write('isFavorite: $isFavorite')
           ..write(')'))
         .toString();
   }
@@ -309,6 +358,7 @@ typedef $$PokemonsTableCreateCompanionBuilder =
       required String name,
       Value<String?> image,
       Value<String> types,
+      Value<bool> isFavorite,
     });
 typedef $$PokemonsTableUpdateCompanionBuilder =
     PokemonsCompanion Function({
@@ -316,6 +366,7 @@ typedef $$PokemonsTableUpdateCompanionBuilder =
       Value<String> name,
       Value<String?> image,
       Value<String> types,
+      Value<bool> isFavorite,
     });
 
 class $$PokemonsTableFilterComposer
@@ -344,6 +395,11 @@ class $$PokemonsTableFilterComposer
 
   ColumnFilters<String> get types => $composableBuilder(
     column: $table.types,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -376,6 +432,11 @@ class $$PokemonsTableOrderingComposer
     column: $table.types,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$PokemonsTableAnnotationComposer
@@ -398,6 +459,11 @@ class $$PokemonsTableAnnotationComposer
 
   GeneratedColumn<String> get types =>
       $composableBuilder(column: $table.types, builder: (column) => column);
+
+  GeneratedColumn<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => column,
+  );
 }
 
 class $$PokemonsTableTableManager
@@ -435,11 +501,13 @@ class $$PokemonsTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<String?> image = const Value.absent(),
                 Value<String> types = const Value.absent(),
+                Value<bool> isFavorite = const Value.absent(),
               }) => PokemonsCompanion(
                 id: id,
                 name: name,
                 image: image,
                 types: types,
+                isFavorite: isFavorite,
               ),
           createCompanionCallback:
               ({
@@ -447,11 +515,13 @@ class $$PokemonsTableTableManager
                 required String name,
                 Value<String?> image = const Value.absent(),
                 Value<String> types = const Value.absent(),
+                Value<bool> isFavorite = const Value.absent(),
               }) => PokemonsCompanion.insert(
                 id: id,
                 name: name,
                 image: image,
                 types: types,
+                isFavorite: isFavorite,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

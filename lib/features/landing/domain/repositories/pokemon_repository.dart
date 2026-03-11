@@ -4,4 +4,8 @@ import 'package:fpdart/fpdart.dart';
 
 abstract class PokemonRepository {
   Future<Either<Failure, List<Pokemon>>> getPokemons([int offset = 0]);
+
+  Future<Either<Failure, void>> addFavorite(Pokemon pokemon);
+  Future<Either<Failure, void>> deleteFavorite(Pokemon pokemon);
+  Future<Either<Failure, List<Pokemon>>> getFavoritePokemons();
 }

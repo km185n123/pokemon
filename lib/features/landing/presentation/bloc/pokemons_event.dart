@@ -19,3 +19,5 @@ class PokemonsSearch extends PokemonsEvent {
   @override
   List<Object> get props => [query];
 }
+
+class PokemonsRefreshFavorites extends PokemonsEvent {}
