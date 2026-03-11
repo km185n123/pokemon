@@ -13,6 +13,8 @@ import 'package:pokemon/core/security/secure_storage_service.dart';
 import 'package:pokemon/core/widgets/cards/favorite_cubit.dart';
 import 'package:pokemon/features/landing/data/datasources/pokemon_local_data_source.dart';
 import 'package:pokemon/features/landing/data/datasources/pokemon_remote_data_source.dart';
+import 'package:pokemon/features/landing/data/services/pokemon_remote_service.dart';
+import 'package:pokemon/features/landing/data/services/pokemon_favorite_service.dart';
 import 'package:pokemon/features/landing/data/repositories/pokemon_repository_impl.dart';
 import 'package:pokemon/features/landing/domain/repositories/pokemon_repository.dart';
 import 'package:pokemon/features/landing/domain/usecases/get_pokemons.dart';
@@ -91,10 +93,20 @@ Future<void> setupServiceLocator(AppConfig config) async {
   // Cache handler
   getIt.registerLazySingleton<CacheHandler>(() => NetworkBoundResource());
 
+  // Services
+  getIt.registerLazySingleton<PokemonRemoteService>(
+    () => PokemonRemoteService(getIt<PokemonRemoteDataSource>()),
+  );
+
+  getIt.registerLazySingleton<PokemonFavoriteService>(
+    () => PokemonFavoriteService(getIt<PokemonLocalDataSource>()),
+  );
+
   // Repository
   getIt.registerLazySingleton<PokemonRepository>(
     () => PokemonRepositoryImpl(
-      getIt<PokemonRemoteDataSource>(),
+      getIt<PokemonRemoteService>(),
+      getIt<PokemonFavoriteService>(),
       getIt<PokemonLocalDataSource>(),
       getIt<CacheHandler>(),
     ),

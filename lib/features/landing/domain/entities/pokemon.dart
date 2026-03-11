@@ -15,6 +15,22 @@ class Pokemon extends Equatable {
     this.isFavorite = false,
   });
 
+  Pokemon copyWith({
+    int? id,
+    String? name,
+    String? image,
+    List<String>? types,
+    bool? isFavorite,
+  }) {
+    return Pokemon(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      image: image ?? this.image,
+      types: types ?? this.types,
+      isFavorite: isFavorite ?? this.isFavorite,
+    );
+  }
+
   @override
   List<Object?> get props => [id, name, image, types, isFavorite];
 }
