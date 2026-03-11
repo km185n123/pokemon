@@ -2,54 +2,16 @@ import 'package:flutter/material.dart';
 
 class PokemonColorUtils {
   static Color getColorByType(String type) {
-    switch (type.toLowerCase()) {
-      case 'grass':
-        return const Color(0xFFA8DAB5); // Light green
-      case 'fire':
-        return const Color(0xFFFFB74D); // Orange
-      case 'water':
-        return const Color(0xFF81D4FA); // Light blue
-      case 'electric':
-        return const Color(0xFFFFD54F); // Yellow
-      case 'poison':
-        return const Color(0xFFCE93D8); // Purple
-      case 'bug':
-        return const Color(0xFFC5E1A5); // Light yellow-green
-      case 'normal':
-        return const Color(0xFFE0E0E0); // Grey
-      case 'fairy':
-        return const Color(0xFFF48FB1); // Pink
-      case 'fighting':
-        return const Color(0xFFEF9A9A); // Light red
-      case 'psychic':
-        return const Color(0xFFF48FB1); // Light pink
-      case 'rock':
-        return const Color(0xFFD7CCC8); // Brown
-      case 'ground':
-        return const Color(0xFFBCAAA4); // Darker brown
-      case 'ghost':
-        return const Color(0xFFB39DDB); // Dark purple
-      case 'ice':
-        return const Color(0xFFB2EBF2); // Cyan
-      case 'dragon':
-        return const Color(0xFF9FA8DA); // Indigo
-      case 'dark':
-        return const Color(0xFF9E9E9E); // Dark grey
-      case 'steel':
-        return const Color(0xFFB0BEC5); // Blue grey
-      case 'flying':
-        return const Color(0xFF90CAF9); // Sky blue
-      default:
-        return const Color(0xFFE0E0E0); // Default grey
-    }
+    final darkerColor = getDarkerColorByType(type);
+    return Color.lerp(darkerColor, Colors.white, 0.5) ?? darkerColor;
   }
 
   static Color getDarkerColorByType(String type) {
     switch (type.toLowerCase()) {
       case 'grass':
-        return const Color(0xFF6CC873);
+        return const Color(0xFF8BC34A);
       case 'fire':
-        return const Color(0xFFFA9C1B);
+        return const Color(0xFFFF9800);
       case 'water':
         return const Color(0xFF29B6F6);
       case 'electric':

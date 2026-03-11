@@ -97,7 +97,7 @@ class _PokemonCardState extends State<PokemonCard> {
         widget.onFavoriteToggled?.call();
       },
       child: Container(
-        height: 140,
+        height: 122,
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
           color: backgroundColor,
@@ -110,7 +110,7 @@ class _PokemonCardState extends State<PokemonCard> {
               right: 0,
               top: 0,
               bottom: 0,
-              width: 150,
+              width: 140,
               child: Container(
                 decoration: BoxDecoration(
                   color: darkerColor,
@@ -126,14 +126,14 @@ class _PokemonCardState extends State<PokemonCard> {
             // Type image watermark / background accent
             Positioned(
               right: 20,
-              top: 20,
+              top: 0,
               bottom: -0,
               width: 100,
               child: Transform.rotate(
-                angle: -0.10,
+                angle: -0.11,
                 child: Image.asset(
                   'assets/images/Pokedex/${primaryType.toLowerCase()}.png',
-                  color: Colors.white.withValues(alpha: 0.70),
+                  color: Colors.white.withValues(alpha: 0.60),
                 ),
               ),
             ),
@@ -142,7 +142,7 @@ class _PokemonCardState extends State<PokemonCard> {
               right: 35,
               bottom: 0,
               top: 8,
-              width: 70,
+              width: 60,
               child: Hero(
                 tag: '${widget.heroContext}_pokemon_${widget.pokemon.id}',
                 child: widget.pokemon.image.isNotEmpty
@@ -156,7 +156,7 @@ class _PokemonCardState extends State<PokemonCard> {
             ),
             // Left content
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -168,18 +168,17 @@ class _PokemonCardState extends State<PokemonCard> {
                       fontSize: 12,
                     ),
                   ),
-                  const SizedBox(height: 4),
                   Text(
                     widget.pokemon.name[0].toUpperCase() +
                         widget.pokemon.name.substring(1).toLowerCase(),
                     style: const TextStyle(
                       color: Colors.black87,
                       fontSize: 22,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w600,
                       letterSpacing: 0.5,
                     ),
                   ),
-                  const Spacer(),
+                  const SizedBox(height: 16),
                   Row(
                     children: widget.pokemon.types
                         .map((type) => PokemonTypeBadge(type: type))

@@ -12,8 +12,8 @@ class PokemonTypeBadge extends StatelessWidget {
     final icon = PokemonColorUtils.getIconByType(type);
 
     return Container(
-      margin: const EdgeInsets.only(right: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      margin: const EdgeInsets.only(right: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(20),
@@ -22,19 +22,19 @@ class PokemonTypeBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: const EdgeInsets.all(2),
+            padding: const EdgeInsets.all(1),
             decoration: const BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, size: 10, color: color),
+            child: Icon(icon, size: 18, color: color),
           ),
           const SizedBox(width: 4),
           Text(
             type[0].toUpperCase() + type.substring(1).toLowerCase(),
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 10,
+              fontSize: 12,
               fontWeight: FontWeight.bold,
             ),
           ),
