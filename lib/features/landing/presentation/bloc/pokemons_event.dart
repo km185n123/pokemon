@@ -21,3 +21,12 @@ class PokemonsSearch extends PokemonsEvent {
 }
 
 class PokemonsRefreshFavorites extends PokemonsEvent {}
+
+class PokemonsFilterChanged extends PokemonsEvent {
+  final List<String> types;
+
+  const PokemonsFilterChanged(this.types);
+
+  @override
+  List<Object> get props => [types];
+}

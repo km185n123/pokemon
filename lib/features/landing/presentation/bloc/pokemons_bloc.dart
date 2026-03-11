@@ -12,13 +12,30 @@ class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
 
   List<Pokemon> _allPokemons = [];
   int _currentOffset = 0;
+  List<String> _selectedTypes = [];
+  String _currentQuery = '';
 
   PokemonsBloc({required this.getPokemons, required this.getFavoritePokemons})
     : super(PokemonsInitial()) {
     on<PokemonsStarted>(_onStarted);
     on<PokemonsLoadMore>(_onLoadMore);
     on<PokemonsSearch>(_onSearch);
+    on<PokemonsFilterChanged>(_onFilterChanged);
     on<PokemonsRefreshFavorites>(_onRefreshFavorites);
+  }
+
+  List<Pokemon> get _filteredPokemons {
+    return _allPokemons.where((pokemon) {
+      final matchesSearch =
+          _currentQuery.isEmpty ||
+          pokemon.name.toLowerCase().contains(_currentQuery.toLowerCase());
+
+      final matchesTypes =
+          _selectedTypes.isEmpty ||
+          _selectedTypes.any((type) => pokemon.types.contains(type));
+
+      return matchesSearch && matchesTypes;
+    }).toList();
   }
 
   Future<void> _onStarted(
@@ -30,7 +47,13 @@ class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
     final result = await getPokemons(_currentOffset);
     result.fold((failure) => emit(PokemonsError(failure)), (pokemons) {
       _allPokemons = pokemons;
-      emit(PokemonsLoaded(pokemons, hasReachedMax: pokemons.isEmpty));
+      emit(
+        PokemonsLoaded(
+          _filteredPokemons,
+          hasReachedMax: pokemons.isEmpty,
+          selectedTypes: _selectedTypes,
+        ),
+      );
     });
   }
 
@@ -61,9 +84,10 @@ class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
             _allPokemons = List.of(_allPokemons)..addAll(pokemons);
             emit(
               PokemonsLoaded(
-                _allPokemons,
+                _filteredPokemons,
                 isLoadingMore: false,
                 hasReachedMax: false,
+                selectedTypes: _selectedTypes,
               ),
             );
           }
@@ -74,20 +98,26 @@ class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
 
   void _onSearch(PokemonsSearch event, Emitter<PokemonsState> emit) {
     if (state is! PokemonsLoaded) return;
+    _currentQuery = event.query;
+    final currentState = state as PokemonsLoaded;
 
-    if (event.query.isEmpty) {
-      emit(PokemonsLoaded(_allPokemons));
-      return;
-    }
+    emit(currentState.copyWith(pokemons: _filteredPokemons));
+  }
 
-    final filteredPokemons = _allPokemons
-        .where(
-          (pokemon) =>
-              pokemon.name.toLowerCase().contains(event.query.toLowerCase()),
-        )
-        .toList();
+  void _onFilterChanged(
+    PokemonsFilterChanged event,
+    Emitter<PokemonsState> emit,
+  ) {
+    if (state is! PokemonsLoaded) return;
+    _selectedTypes = event.types;
+    final currentState = state as PokemonsLoaded;
 
-    emit(PokemonsLoaded(filteredPokemons));
+    emit(
+      currentState.copyWith(
+        pokemons: _filteredPokemons,
+        selectedTypes: _selectedTypes,
+      ),
+    );
   }
 
   Future<void> _onRefreshFavorites(
@@ -120,9 +150,10 @@ class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
         // Re-emit either the full list or filtered if currently searching
         emit(
           PokemonsLoaded(
-            _allPokemons,
+            _filteredPokemons,
             hasReachedMax: currentState.hasReachedMax,
             isLoadingMore: currentState.isLoadingMore,
+            selectedTypes: _selectedTypes,
           ),
         );
       },
