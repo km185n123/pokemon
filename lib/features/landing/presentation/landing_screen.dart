@@ -96,9 +96,47 @@ class _LandingScreenState extends State<LandingScreen> {
                               : 1), // +1 for header, +1 for loading indicator at bottom
                       itemBuilder: (context, index) {
                         if (index == 0) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 0),
-                          );
+                          if (state.selectedTypes.isNotEmpty) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Se han encontrado ${state.pokemons.length} resultados',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      context.read<PokemonsBloc>().add(
+                                        const PokemonsFilterChanged([]),
+                                      );
+                                    },
+                                    style: TextButton.styleFrom(
+                                      padding: EdgeInsets.zero,
+                                      minimumSize: Size.zero,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    child: const Text(
+                                      'Borrar filtro',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
                         }
 
                         if (index == state.pokemons.length + 1) {
