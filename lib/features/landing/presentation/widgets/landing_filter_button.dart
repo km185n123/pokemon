@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class PokemonSearchByFilterButton extends StatelessWidget {
+class LandingFilterButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
-  const PokemonSearchByFilterButton({super.key, this.onPressed});
+  const LandingFilterButton({super.key, this.onPressed});
 
   @override
   Widget build(BuildContext context) {

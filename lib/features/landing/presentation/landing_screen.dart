@@ -1,16 +1,12 @@
 import 'dart:async';
 import 'package:pokemon/core/di/service_locator.dart';
 import 'package:pokemon/core/events/tab_event_bus.dart';
-import 'package:pokemon/core/error/failure.dart';
-import 'package:pokemon/core/widgets/feedback/feedback_message.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_bloc.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_event.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_state.dart';
-import 'package:pokemon/core/widgets/cards/pokemon_card.dart';
-import 'package:pokemon/features/landing/presentation/widgets/search_bar.dart'
-    as custom;
-
-import 'package:pokemon/l10n/app_localizations.dart';
+import 'package:pokemon/features/landing/presentation/widgets/landing_search_header.dart';
+import 'package:pokemon/features/landing/presentation/widgets/landing_pokemon_list.dart';
+import 'package:pokemon/features/landing/presentation/widgets/landing_error_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -58,10 +54,7 @@ class _LandingScreenState extends State<LandingScreen> {
         child: Column(
           children: [
             const SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: const custom.SearchBar(),
-            ),
+            const LandingSearchHeader(),
             const SizedBox(height: 32),
             Expanded(
               child: BlocBuilder<PokemonsBloc, PokemonsState>(
@@ -69,93 +62,11 @@ class _LandingScreenState extends State<LandingScreen> {
                   if (state is PokemonsLoading) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is PokemonsError) {
-                    final isNetworkError = state.failure is ConnectionFailure;
-                    final l10n = AppLocalizations.of(context)!;
-                    return FeedbackMessage(
-                      title: isNetworkError
-                          ? l10n.connectionLost
-                          : l10n.genericError,
-                      message: isNetworkError
-                          ? l10n.connectionLostMessage
-                          : l10n.serverErrorMessage,
-                      type: isNetworkError
-                          ? FeedbackType.network
-                          : FeedbackType.server,
-                      onRetry: () {
-                        context.read<PokemonsBloc>().add(PokemonsStarted());
-                      },
-                    );
+                    return LandingErrorView(failure: state.failure);
                   } else if (state is PokemonsLoaded) {
-                    return ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      itemCount:
-                          state.pokemons.length +
-                          (state.isLoadingMore
-                              ? 2
-                              : 1), // +1 for header, +1 for loading indicator at bottom
-                      itemBuilder: (context, index) {
-                        if (index == 0) {
-                          if (state.selectedTypes.isNotEmpty) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Se han encontrado ${state.pokemons.length} resultados',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      context.read<PokemonsBloc>().add(
-                                        const PokemonsFilterChanged([]),
-                                      );
-                                    },
-                                    style: TextButton.styleFrom(
-                                      padding: EdgeInsets.zero,
-                                      minimumSize: Size.zero,
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                    child: const Text(
-                                      'Borrar filtro',
-                                      style: TextStyle(
-                                        color: Colors.blue,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        }
-
-                        if (index == state.pokemons.length + 1) {
-                          return const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 24),
-                            child: Center(child: CircularProgressIndicator()),
-                          );
-                        }
-
-                        final pokemon = state.pokemons[index - 1];
-                        return PokemonCard(
-                          pokemon: pokemon,
-                          onFavoriteToggled: () {
-                            context.read<PokemonsBloc>().add(
-                              PokemonsRefreshFavorites(),
-                            );
-                          },
-                        );
-                      },
+                    return LandingPokemonList(
+                      scrollController: _scrollController,
+                      state: state,
                     );
                   }
                   return const SizedBox.shrink();

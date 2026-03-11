@@ -4,8 +4,8 @@ import 'package:pokemon/features/landing/presentation/bloc/pokemons_bloc.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_event.dart';
 import 'package:pokemon/l10n/app_localizations.dart';
 
-class PokemonSearchField extends StatelessWidget {
-  const PokemonSearchField({super.key});
+class LandingSearchField extends StatelessWidget {
+  const LandingSearchField({super.key});
 
   @override
   Widget build(BuildContext context) {
