@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokemon/core/di/service_locator.dart';
 import 'package:pokemon/core/events/tab_event_bus.dart';
-import 'package:pokemon/core/widgets/feedback/empty_data_feedback.dart';
+import 'package:pokemon/core/widgets/feedback/illustration_feedback.dart';
 import 'package:pokemon/features/favorites/presentation/bloc/favorites_bloc.dart';
 import 'package:pokemon/features/favorites/presentation/bloc/favorites_event.dart';
 import 'package:pokemon/features/favorites/presentation/bloc/favorites_state.dart';
@@ -67,7 +67,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               return Center(child: Text(state.failure.message));
             } else if (state is FavoritesEmpty) {
               return const Center(
-                child: EmptyDataFeedback(
+                child: IllustrationFeedback(
                   imageAsset: 'assets/images/fish_empty.png',
                   title: 'No has marcado ningún\nPokémon como favorito',
                   subtitle:

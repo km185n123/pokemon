@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class EmptyDataFeedback extends StatelessWidget {
+class IllustrationFeedback extends StatelessWidget {
   final String imageAsset;
   final String title;
   final String subtitle;
 
-  const EmptyDataFeedback({
+  const IllustrationFeedback({
     super.key,
     required this.imageAsset,
     required this.title,
