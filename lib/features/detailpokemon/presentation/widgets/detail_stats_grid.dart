@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:pokemon/features/detailpokemon/domain/entities/pokemon_detail.dart';
+
 class DetailStatsGrid extends StatelessWidget {
-  const DetailStatsGrid({super.key});
+  final PokemonDetail detail;
+
+  const DetailStatsGrid({super.key, required this.detail});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +17,7 @@ class DetailStatsGrid extends StatelessWidget {
               child: _StatCard(
                 icon: Icons.monitor_weight_outlined,
                 title: 'PESO',
-                value: '6,9 kg', // Mocked
+                value: '${detail.weight.toStringAsFixed(1)} kg',
               ),
             ),
             const SizedBox(width: 16),
@@ -21,7 +25,7 @@ class DetailStatsGrid extends StatelessWidget {
               child: _StatCard(
                 icon: Icons.height,
                 title: 'ALTURA',
-                value: '0,7 m', // Mocked
+                value: '${detail.height.toStringAsFixed(1)} m',
               ),
             ),
           ],
@@ -33,7 +37,7 @@ class DetailStatsGrid extends StatelessWidget {
               child: _StatCard(
                 icon: Icons.category_outlined,
                 title: 'CATEGORÍA',
-                value: 'SEMILLA', // Mocked
+                value: detail.category.toUpperCase(),
               ),
             ),
             const SizedBox(width: 16),
@@ -41,7 +45,7 @@ class DetailStatsGrid extends StatelessWidget {
               child: _StatCard(
                 icon: Icons.offline_bolt_outlined,
                 title: 'HABILIDAD',
-                value: 'Espesura', // Mocked
+                value: detail.ability.toUpperCase(),
               ),
             ),
           ],

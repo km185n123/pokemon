@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon/features/landing/domain/entities/pokemon.dart';
+import 'package:pokemon/features/detailpokemon/domain/entities/pokemon_detail.dart';
 import 'package:pokemon/core/widgets/chips/pokemon_type_badge.dart';
 
 class DetailTitleSection extends StatelessWidget {
-  final Pokemon pokemon;
+  final PokemonDetail pokemon;
 
   const DetailTitleSection({super.key, required this.pokemon});
 

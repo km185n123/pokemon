@@ -16,6 +16,9 @@ _PokemonDetailDto _$PokemonDetailDtoFromJson(Map<String, dynamic> json) =>
           .map((e) => TypeDto.fromJson(e as Map<String, dynamic>))
           .toList(),
       sprites: SpritesDto.fromJson(json['sprites'] as Map<String, dynamic>),
+      abilities: (json['abilities'] as List<dynamic>)
+          .map((e) => AbilityDto.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$PokemonDetailDtoToJson(_PokemonDetailDto instance) =>
@@ -26,4 +29,5 @@ Map<String, dynamic> _$PokemonDetailDtoToJson(_PokemonDetailDto instance) =>
       'weight': instance.weight,
       'types': instance.types,
       'sprites': instance.sprites,
+      'abilities': instance.abilities,
     };

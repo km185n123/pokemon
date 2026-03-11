@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon/features/landing/domain/entities/pokemon.dart';
+import 'package:pokemon/features/detailpokemon/domain/entities/pokemon_detail.dart';
 import 'package:pokemon/features/detailpokemon/presentation/widgets/detail_title_section.dart';
 import 'package:pokemon/features/detailpokemon/presentation/widgets/detail_description.dart';
 import 'package:pokemon/features/detailpokemon/presentation/widgets/detail_stats_grid.dart';
@@ -7,9 +7,9 @@ import 'package:pokemon/features/detailpokemon/presentation/widgets/detail_gende
 import 'package:pokemon/features/detailpokemon/presentation/widgets/detail_weaknesses_section.dart';
 
 class ContentDetail extends StatelessWidget {
-  final Pokemon pokemon;
+  final PokemonDetail detail;
 
-  const ContentDetail({super.key, required this.pokemon});
+  const ContentDetail({super.key, required this.detail});
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +26,15 @@ class ContentDetail extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DetailTitleSection(pokemon: pokemon),
+            DetailTitleSection(pokemon: detail),
             const SizedBox(height: 24),
-            const DetailDescription(),
+            DetailDescription(detail: detail),
             const SizedBox(height: 24),
-            const DetailStatsGrid(),
+            DetailStatsGrid(detail: detail),
             const SizedBox(height: 24),
-            const DetailGenderBar(),
+            DetailGenderBar(detail: detail),
             const SizedBox(height: 24),
-            const DetailWeaknessesSection(),
+            DetailWeaknessesSection(detail: detail),
             // Adding extra bottom padding for scrolling
             const SizedBox(height: 60),
           ],

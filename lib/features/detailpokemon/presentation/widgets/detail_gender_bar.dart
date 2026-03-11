@@ -1,10 +1,41 @@
 import 'package:flutter/material.dart';
 
+import 'package:pokemon/features/detailpokemon/domain/entities/pokemon_detail.dart';
+
 class DetailGenderBar extends StatelessWidget {
-  const DetailGenderBar({super.key});
+  final PokemonDetail detail;
+
+  const DetailGenderBar({super.key, required this.detail});
 
   @override
   Widget build(BuildContext context) {
+    // If the pokemon is genderless:
+    if (detail.malePercentage == 0 && detail.femalePercentage == 0) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Center(
+            child: Text(
+              'GENERO',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Center(
+            child: Text(
+              'Sin género',
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+          ),
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,31 +60,44 @@ class DetailGenderBar extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Expanded(
-                flex: 875, // 87.5% Male
-                child: Container(
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4),
-                      bottomLeft: Radius.circular(4),
+              if (detail.malePercentage > 0)
+                Expanded(
+                  flex: detail.malePercentage.toInt(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: const Radius.circular(4),
+                        bottomLeft: const Radius.circular(4),
+                        topRight: Radius.circular(
+                          detail.femalePercentage == 0 ? 4 : 0,
+                        ),
+                        bottomRight: Radius.circular(
+                          detail.femalePercentage == 0 ? 4 : 0,
+                        ),
+                      ),
+                      color: Colors.blueAccent,
                     ),
-                    color: Colors.blueAccent,
                   ),
                 ),
-              ),
-              Expanded(
-                flex:
-                    125, // 12.5% Female (rest of the bar is already pink so we just leave it transparent or color it)
-                child: Container(
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(4),
-                      bottomRight: Radius.circular(4),
+              if (detail.femalePercentage > 0)
+                Expanded(
+                  flex: detail.femalePercentage.toInt(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topRight: const Radius.circular(4),
+                        bottomRight: const Radius.circular(4),
+                        topLeft: Radius.circular(
+                          detail.malePercentage == 0 ? 4 : 0,
+                        ),
+                        bottomLeft: Radius.circular(
+                          detail.malePercentage == 0 ? 4 : 0,
+                        ),
+                      ),
+                      color: Colors.pinkAccent,
                     ),
-                    color: Colors.pinkAccent,
                   ),
                 ),
-              ),
             ],
           ),
         ),
@@ -66,7 +110,7 @@ class DetailGenderBar extends StatelessWidget {
                 Icon(Icons.male, size: 16, color: Colors.grey.shade600),
                 const SizedBox(width: 4),
                 Text(
-                  '87,5%',
+                  '${detail.malePercentage.toStringAsFixed(1)}%',
                   style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
                 ),
               ],
@@ -76,7 +120,7 @@ class DetailGenderBar extends StatelessWidget {
                 Icon(Icons.female, size: 16, color: Colors.grey.shade600),
                 const SizedBox(width: 4),
                 Text(
-                  '12,5%',
+                  '${detail.femalePercentage.toStringAsFixed(1)}%',
                   style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
                 ),
               ],

@@ -7,9 +7,12 @@ import 'package:pokemon/features/landing/data/dto/pokemon_detail_dto.dart';
 
 import 'package:pokemon/core/network/api_endpoints.dart';
 
+import 'package:pokemon/features/landing/data/dto/pokemon_species_dto.dart';
+
 abstract class PokemonRemoteDataSource {
   Future<Either<Failure, PokemonListResponseDto>> getPokemons(int offset);
   Future<Either<Failure, PokemonDetailDto>> getPokemonDetail(String url);
+  Future<Either<Failure, PokemonSpeciesDto>> getPokemonSpecies(int id);
 }
 
 class PokemonRemoteDataSourceImpl implements PokemonRemoteDataSource {
@@ -30,5 +33,11 @@ class PokemonRemoteDataSourceImpl implements PokemonRemoteDataSource {
   @override
   Future<Either<Failure, PokemonDetailDto>> getPokemonDetail(String url) {
     return apiClient.request(GetStrategy(), url, PokemonDetailDto.fromJson);
+  }
+
+  @override
+  Future<Either<Failure, PokemonSpeciesDto>> getPokemonSpecies(int id) {
+    final url = '${ApiEndpoints.pokemonSpecies}/$id';
+    return apiClient.request(GetStrategy(), url, PokemonSpeciesDto.fromJson);
   }
 }

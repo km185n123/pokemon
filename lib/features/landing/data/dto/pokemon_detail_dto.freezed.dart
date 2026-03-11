@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PokemonDetailDto {
 
- int get id; String get name; int get height; int get weight; List<TypeDto> get types; SpritesDto get sprites;
+ int get id; String get name; int get height; int get weight; List<TypeDto> get types; SpritesDto get sprites; List<AbilityDto> get abilities;
 /// Create a copy of PokemonDetailDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $PokemonDetailDtoCopyWith<PokemonDetailDto> get copyWith => _$PokemonDetailDtoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PokemonDetailDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.height, height) || other.height == height)&&(identical(other.weight, weight) || other.weight == weight)&&const DeepCollectionEquality().equals(other.types, types)&&(identical(other.sprites, sprites) || other.sprites == sprites));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PokemonDetailDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.height, height) || other.height == height)&&(identical(other.weight, weight) || other.weight == weight)&&const DeepCollectionEquality().equals(other.types, types)&&(identical(other.sprites, sprites) || other.sprites == sprites)&&const DeepCollectionEquality().equals(other.abilities, abilities));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,height,weight,const DeepCollectionEquality().hash(types),sprites);
+int get hashCode => Object.hash(runtimeType,id,name,height,weight,const DeepCollectionEquality().hash(types),sprites,const DeepCollectionEquality().hash(abilities));
 
 @override
 String toString() {
-  return 'PokemonDetailDto(id: $id, name: $name, height: $height, weight: $weight, types: $types, sprites: $sprites)';
+  return 'PokemonDetailDto(id: $id, name: $name, height: $height, weight: $weight, types: $types, sprites: $sprites, abilities: $abilities)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $PokemonDetailDtoCopyWith<$Res>  {
   factory $PokemonDetailDtoCopyWith(PokemonDetailDto value, $Res Function(PokemonDetailDto) _then) = _$PokemonDetailDtoCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, int height, int weight, List<TypeDto> types, SpritesDto sprites
+ int id, String name, int height, int weight, List<TypeDto> types, SpritesDto sprites, List<AbilityDto> abilities
 });
 
 
@@ -65,7 +65,7 @@ class _$PokemonDetailDtoCopyWithImpl<$Res>
 
 /// Create a copy of PokemonDetailDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? height = null,Object? weight = null,Object? types = null,Object? sprites = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? height = null,Object? weight = null,Object? types = null,Object? sprites = null,Object? abilities = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -73,7 +73,8 @@ as String,height: null == height ? _self.height : height // ignore: cast_nullabl
 as int,weight: null == weight ? _self.weight : weight // ignore: cast_nullable_to_non_nullable
 as int,types: null == types ? _self.types : types // ignore: cast_nullable_to_non_nullable
 as List<TypeDto>,sprites: null == sprites ? _self.sprites : sprites // ignore: cast_nullable_to_non_nullable
-as SpritesDto,
+as SpritesDto,abilities: null == abilities ? _self.abilities : abilities // ignore: cast_nullable_to_non_nullable
+as List<AbilityDto>,
   ));
 }
 /// Create a copy of PokemonDetailDto
@@ -167,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  int height,  int weight,  List<TypeDto> types,  SpritesDto sprites)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  int height,  int weight,  List<TypeDto> types,  SpritesDto sprites,  List<AbilityDto> abilities)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PokemonDetailDto() when $default != null:
-return $default(_that.id,_that.name,_that.height,_that.weight,_that.types,_that.sprites);case _:
+return $default(_that.id,_that.name,_that.height,_that.weight,_that.types,_that.sprites,_that.abilities);case _:
   return orElse();
 
 }
@@ -188,10 +189,10 @@ return $default(_that.id,_that.name,_that.height,_that.weight,_that.types,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  int height,  int weight,  List<TypeDto> types,  SpritesDto sprites)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  int height,  int weight,  List<TypeDto> types,  SpritesDto sprites,  List<AbilityDto> abilities)  $default,) {final _that = this;
 switch (_that) {
 case _PokemonDetailDto():
-return $default(_that.id,_that.name,_that.height,_that.weight,_that.types,_that.sprites);case _:
+return $default(_that.id,_that.name,_that.height,_that.weight,_that.types,_that.sprites,_that.abilities);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -208,10 +209,10 @@ return $default(_that.id,_that.name,_that.height,_that.weight,_that.types,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  int height,  int weight,  List<TypeDto> types,  SpritesDto sprites)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  int height,  int weight,  List<TypeDto> types,  SpritesDto sprites,  List<AbilityDto> abilities)?  $default,) {final _that = this;
 switch (_that) {
 case _PokemonDetailDto() when $default != null:
-return $default(_that.id,_that.name,_that.height,_that.weight,_that.types,_that.sprites);case _:
+return $default(_that.id,_that.name,_that.height,_that.weight,_that.types,_that.sprites,_that.abilities);case _:
   return null;
 
 }
@@ -223,7 +224,7 @@ return $default(_that.id,_that.name,_that.height,_that.weight,_that.types,_that.
 @JsonSerializable()
 
 class _PokemonDetailDto implements PokemonDetailDto {
-  const _PokemonDetailDto({required this.id, required this.name, required this.height, required this.weight, required final  List<TypeDto> types, required this.sprites}): _types = types;
+  const _PokemonDetailDto({required this.id, required this.name, required this.height, required this.weight, required final  List<TypeDto> types, required this.sprites, required final  List<AbilityDto> abilities}): _types = types,_abilities = abilities;
   factory _PokemonDetailDto.fromJson(Map<String, dynamic> json) => _$PokemonDetailDtoFromJson(json);
 
 @override final  int id;
@@ -238,6 +239,13 @@ class _PokemonDetailDto implements PokemonDetailDto {
 }
 
 @override final  SpritesDto sprites;
+ final  List<AbilityDto> _abilities;
+@override List<AbilityDto> get abilities {
+  if (_abilities is EqualUnmodifiableListView) return _abilities;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_abilities);
+}
+
 
 /// Create a copy of PokemonDetailDto
 /// with the given fields replaced by the non-null parameter values.
@@ -252,16 +260,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PokemonDetailDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.height, height) || other.height == height)&&(identical(other.weight, weight) || other.weight == weight)&&const DeepCollectionEquality().equals(other._types, _types)&&(identical(other.sprites, sprites) || other.sprites == sprites));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PokemonDetailDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.height, height) || other.height == height)&&(identical(other.weight, weight) || other.weight == weight)&&const DeepCollectionEquality().equals(other._types, _types)&&(identical(other.sprites, sprites) || other.sprites == sprites)&&const DeepCollectionEquality().equals(other._abilities, _abilities));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,height,weight,const DeepCollectionEquality().hash(_types),sprites);
+int get hashCode => Object.hash(runtimeType,id,name,height,weight,const DeepCollectionEquality().hash(_types),sprites,const DeepCollectionEquality().hash(_abilities));
 
 @override
 String toString() {
-  return 'PokemonDetailDto(id: $id, name: $name, height: $height, weight: $weight, types: $types, sprites: $sprites)';
+  return 'PokemonDetailDto(id: $id, name: $name, height: $height, weight: $weight, types: $types, sprites: $sprites, abilities: $abilities)';
 }
 
 
@@ -272,7 +280,7 @@ abstract mixin class _$PokemonDetailDtoCopyWith<$Res> implements $PokemonDetailD
   factory _$PokemonDetailDtoCopyWith(_PokemonDetailDto value, $Res Function(_PokemonDetailDto) _then) = __$PokemonDetailDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, int height, int weight, List<TypeDto> types, SpritesDto sprites
+ int id, String name, int height, int weight, List<TypeDto> types, SpritesDto sprites, List<AbilityDto> abilities
 });
 
 
@@ -289,7 +297,7 @@ class __$PokemonDetailDtoCopyWithImpl<$Res>
 
 /// Create a copy of PokemonDetailDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? height = null,Object? weight = null,Object? types = null,Object? sprites = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? height = null,Object? weight = null,Object? types = null,Object? sprites = null,Object? abilities = null,}) {
   return _then(_PokemonDetailDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -297,7 +305,8 @@ as String,height: null == height ? _self.height : height // ignore: cast_nullabl
 as int,weight: null == weight ? _self.weight : weight // ignore: cast_nullable_to_non_nullable
 as int,types: null == types ? _self._types : types // ignore: cast_nullable_to_non_nullable
 as List<TypeDto>,sprites: null == sprites ? _self.sprites : sprites // ignore: cast_nullable_to_non_nullable
-as SpritesDto,
+as SpritesDto,abilities: null == abilities ? _self._abilities : abilities // ignore: cast_nullable_to_non_nullable
+as List<AbilityDto>,
   ));
 }
 

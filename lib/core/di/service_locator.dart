@@ -26,6 +26,8 @@ import 'package:pokemon/features/favorites/presentation/bloc/favorites_bloc.dart
 import 'package:pokemon/core/services/local_preferences_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_it/get_it.dart';
+import 'package:pokemon/features/detailpokemon/domain/usecases/get_pokemon_detail.dart';
+import 'package:pokemon/features/detailpokemon/presentation/cubit/pokemon_detail_cubit.dart';
 
 final getIt = GetIt.instance;
 Future<void> setupServiceLocator(AppConfig config) async {
@@ -103,6 +105,7 @@ Future<void> setupServiceLocator(AppConfig config) async {
   getIt.registerLazySingleton(() => AddFavoritePokemon(getIt()));
   getIt.registerLazySingleton(() => DeleteFavoritePokemon(getIt()));
   getIt.registerLazySingleton(() => GetFavoritePokemons(getIt()));
+  getIt.registerLazySingleton(() => GetPokemonDetailUseCase(getIt()));
 
   // Blocs
   getIt.registerFactory(
@@ -114,6 +117,7 @@ Future<void> setupServiceLocator(AppConfig config) async {
       deleteFavoritePokemon: getIt(),
     ),
   );
+  getIt.registerFactory(() => PokemonDetailCubit(getIt()));
 
   await getIt.allReady();
 }

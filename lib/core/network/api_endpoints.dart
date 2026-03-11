@@ -3,4 +3,6 @@ class ApiEndpoints {
   ApiEndpoints._();
 
   static const String pokemon = '/pokemon';
+  static const String pokemonSpecies = '/pokemon-species';
+  static const String type = '/type';
 }
