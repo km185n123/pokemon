@@ -30,7 +30,6 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> toggleOfflineDb(bool value) async {
-    // Optimistic UI update
     emit(state.copyWith(isOfflineDbEnabled: value));
     await repository.setOfflineDbEnabled(value);
   }

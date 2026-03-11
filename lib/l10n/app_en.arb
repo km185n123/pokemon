@@ -1,11 +1,149 @@
 {
-  "appTitle": "Pokemon",
-  "searchHint": "Search pokemon...",
+  "@@locale": "en",
+  "appTitle": "Pokédex",
+  "@appTitle": { "description": "The application title" },
+
+  "searchHint": "Search Pokémon...",
+  "@searchHint": { "description": "Search bar placeholder" },
+
+  "filterButton": "Filter",
+  "@filterButton": { "description": "Filter button label" },
+
+  "applyFilter": "Apply Filter",
+  "@applyFilter": { "description": "Apply filter button" },
+
+  "clearFilter": "Clear Filter",
+  "@clearFilter": { "description": "Clear filter button" },
+
+  "filterResultsCount": "{count} results found",
+  "@filterResultsCount": {
+    "description": "How many results after filter",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
   "description": "Description",
+  "@description": { "description": "Section header for Pokémon description" },
+
+  "noDescription": "No description available.",
+  "@noDescription": { "description": "Fallback when no description is available" },
+
+  "statWeight": "WEIGHT",
+  "@statWeight": { "description": "Pokémon weight label" },
+
+  "statHeight": "HEIGHT",
+  "@statHeight": { "description": "Pokémon height label" },
+
+  "statCategory": "CATEGORY",
+  "@statCategory": { "description": "Pokémon category label" },
+
+  "statAbility": "ABILITY",
+  "@statAbility": { "description": "Pokémon ability label" },
+
+  "weaknesses": "Weaknesses",
+  "@weaknesses": { "description": "Section header for weaknesses" },
+
+  "gender": "Gender",
+  "@gender": { "description": "Section header for gender" },
+
+  "genderMale": "Male",
+  "@genderMale": { "description": "Male gender label" },
+
+  "genderFemale": "Female",
+  "@genderFemale": { "description": "Female gender label" },
+
+  "genderGenderless": "Genderless",
+  "@genderGenderless": { "description": "Genderless label" },
+
+  "favoritesTitle": "Favorites",
+  "@favoritesTitle": { "description": "Title for favorites screen" },
+
+  "favoritesEmpty": "You haven't marked any\nPokémon as favorite",
+  "@favoritesEmpty": { "description": "Empty title on favorites screen" },
+
+  "favoritesEmptySubtitle": "Tap the heart icon on your favorite\nPokémon and they will appear here.",
+  "@favoritesEmptySubtitle": { "description": "Empty subtitle on favorites screen" },
+
+  "favoritesRemovedSnackbar": "{name} removed from favorites",
+  "@favoritesRemovedSnackbar": {
+    "description": "Snackbar when a Pokémon is removed",
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "tutorialPage1Title": "All Pokémon in\none place",
+  "@tutorialPage1Title": { "description": "Tutorial page 1 title" },
+
+  "tutorialPage1Subtitle": "Access a wide list of Pokémon from all generations created by Nintendo",
+  "@tutorialPage1Subtitle": { "description": "Tutorial page 1 subtitle" },
+
+  "tutorialPage2Title": "Keep your Pokédex\nup to date",
+  "@tutorialPage2Title": { "description": "Tutorial page 2 title" },
+
+  "tutorialPage2Subtitle": "Register and save your profile, favorite Pokémon, settings, and much more in the app",
+  "@tutorialPage2Subtitle": { "description": "Tutorial page 2 subtitle" },
+
+  "tutorialContinue": "Continue",
+  "@tutorialContinue": { "description": "Tutorial continue button" },
+
+  "tutorialGetStarted": "Let's Go",
+  "@tutorialGetStarted": { "description": "Tutorial final button" },
+
+  "settingsTitle": "Settings",
+  "@settingsTitle": { "description": "Title for settings/profile screen" },
+
+  "settingsEnableCache": "Enable Database Cache",
+  "@settingsEnableCache": { "description": "Toggle label for database cache" },
+
+  "settingsEnableCacheSubtitle": "Pokémon list will be saved locally for offline browsing",
+  "@settingsEnableCacheSubtitle": { "description": "Subtitle for database cache toggle" },
+
+  "offlineBanner": "No Internet Connection",
+  "@offlineBanner": { "description": "Text shown in offline banner" },
+
+  "errorTitle": "Something went wrong...",
+  "@errorTitle": { "description": "Generic error title on landing" },
+
+  "errorSubtitle": "We couldn't load the information right now. Check your connection or try again later.",
+  "@errorSubtitle": { "description": "Generic error subtitle on landing" },
+
   "retry": "Retry",
+  "@retry": { "description": "Retry button label" },
+
   "connectionLost": "Connection Lost",
+  "@connectionLost": { "description": "Network failure title" },
+
   "connectionLostMessage": "No internet connection. Please check your network settings.",
+  "@connectionLostMessage": { "description": "Network failure message" },
+
   "serverError": "Something went wrong",
+  "@serverError": { "description": "Server error title" },
+
   "serverErrorMessage": "Server is currently unavailable. Please try again later.",
-  "genericError": "Oops! Something went wrong"
+  "@serverErrorMessage": { "description": "Server error message" },
+
+  "navPokedex": "Pokédex",
+  "@navPokedex": { "description": "Bottom nav: Pokédex tab" },
+
+  "navFavorites": "Favorites",
+  "@navFavorites": { "description": "Bottom nav: Favorites tab" },
+
+  "navRegions": "Regions",
+  "@navRegions": { "description": "Bottom nav: Regions tab" },
+
+  "navProfile": "Profile",
+  "@navProfile": { "description": "Bottom nav: Profile tab" },
+
+  "filterTitle": "Filter by your preferences",
+  "@filterTitle": { "description": "Filter bottom sheet title" },
+
+  "filterTypeLabel": "Type",
+  "@filterTypeLabel": { "description": "Filter section label for Pokémon type" },
+
+  "filterApply": "Apply",
+  "@filterApply": { "description": "Apply filter button" },
+
+  "filterCancel": "Cancel",
+  "@filterCancel": { "description": "Cancel filter button" },
+
+  "genericError": "Oops! Something went wrong",
+  "@genericError": { "description": "Generic fallback error" }
 }

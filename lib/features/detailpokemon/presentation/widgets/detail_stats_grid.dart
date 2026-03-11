@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:pokemon/features/detailpokemon/domain/entities/pokemon_detail.dart';
+import 'package:pokemon/l10n/app_localizations.dart';
 
 class DetailStatsGrid extends StatelessWidget {
   final PokemonDetail detail;
@@ -9,6 +9,7 @@ class DetailStatsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         Row(
@@ -16,7 +17,7 @@ class DetailStatsGrid extends StatelessWidget {
             Expanded(
               child: _StatCard(
                 icon: Icons.monitor_weight_outlined,
-                title: 'PESO',
+                title: l10n.statWeight,
                 value: '${detail.weight.toStringAsFixed(1)} kg',
               ),
             ),
@@ -24,7 +25,7 @@ class DetailStatsGrid extends StatelessWidget {
             Expanded(
               child: _StatCard(
                 icon: Icons.height,
-                title: 'ALTURA',
+                title: l10n.statHeight,
                 value: '${detail.height.toStringAsFixed(1)} m',
               ),
             ),
@@ -36,7 +37,7 @@ class DetailStatsGrid extends StatelessWidget {
             Expanded(
               child: _StatCard(
                 icon: Icons.category_outlined,
-                title: 'CATEGORÍA',
+                title: l10n.statCategory,
                 value: detail.category.toUpperCase(),
               ),
             ),
@@ -44,7 +45,7 @@ class DetailStatsGrid extends StatelessWidget {
             Expanded(
               child: _StatCard(
                 icon: Icons.offline_bolt_outlined,
-                title: 'HABILIDAD',
+                title: l10n.statAbility,
                 value: detail.ability.toUpperCase(),
               ),
             ),

@@ -10,6 +10,7 @@ import 'package:pokemon/features/favorites/presentation/bloc/favorites_state.dar
 import 'package:pokemon/core/widgets/cards/pokemon_card.dart';
 import 'package:pokemon/core/widgets/cards/favorite_cubit.dart';
 import 'package:pokemon/core/widgets/cards/favorite_state.dart';
+import 'package:pokemon/l10n/app_localizations.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -43,21 +44,23 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocProvider.value(
       value: _favoritesBloc,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Favoritos',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          title: Text(
+            l10n.favoritesTitle,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
           ),
           backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-            onPressed: () {
-              // Si bien es un tab, ponemos un botón para dar la estética requerida
-            },
+            onPressed: () {},
           ),
           centerTitle: true,
         ),
@@ -72,12 +75,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               } else if (state is FavoritesError) {
                 return Center(child: Text(state.failure.message));
               } else if (state is FavoritesEmpty) {
-                return const Center(
+                return Center(
                   child: IllustrationFeedback(
                     imageAsset: 'assets/images/fish_empty.png',
-                    title: 'No has marcado ningún\nPokémon como favorito',
-                    subtitle:
-                        'Haz clic en el ícono de corazón de tus\nPokémon favoritos y aparecerán aquí.',
+                    title: l10n.favoritesEmpty,
+                    subtitle: l10n.favoritesEmptySubtitle,
                   ),
                 );
               } else if (state is FavoritesLoaded) {
@@ -97,7 +99,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              '${pokemon.name} eliminado de favoritos',
+                              l10n.favoritesRemovedSnackbar(pokemon.name),
                             ),
                           ),
                         );

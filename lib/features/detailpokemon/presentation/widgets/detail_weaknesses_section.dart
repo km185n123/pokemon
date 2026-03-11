@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon/core/widgets/chips/pokemon_type_badge.dart';
-
 import 'package:pokemon/features/detailpokemon/domain/entities/pokemon_detail.dart';
+import 'package:pokemon/l10n/app_localizations.dart';
 
 class DetailWeaknessesSection extends StatelessWidget {
   final PokemonDetail detail;
@@ -11,13 +11,14 @@ class DetailWeaknessesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (detail.weaknesses.isEmpty) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context)!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Debilidades',
-          style: TextStyle(
+        Text(
+          l10n.weaknesses,
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Colors.black87,

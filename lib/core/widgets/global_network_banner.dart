@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokemon/core/network/network_bloc.dart';
+import 'package:pokemon/l10n/app_localizations.dart';
 
 class GlobalNetworkBanner extends StatelessWidget {
   final Widget child;
@@ -29,14 +30,19 @@ class GlobalNetworkBanner extends StatelessWidget {
                     ),
                     width: double.infinity,
                     color: Colors.redAccent,
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.wifi_off, color: Colors.white, size: 20),
-                        SizedBox(width: 8),
+                        const Icon(
+                          Icons.wifi_off,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
                         Text(
-                          'Sin conexión a Internet',
-                          style: TextStyle(
+                          AppLocalizations.of(context)?.offlineBanner ??
+                              'No Internet Connection',
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),

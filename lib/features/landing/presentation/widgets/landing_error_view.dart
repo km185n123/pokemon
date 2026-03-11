@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokemon/core/error/failure.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_bloc.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_event.dart';
+import 'package:pokemon/l10n/app_localizations.dart';
 
 class LandingErrorView extends StatelessWidget {
   final Failure failure;
@@ -11,6 +12,7 @@ class LandingErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Center(
@@ -28,7 +30,7 @@ class LandingErrorView extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'Algo salió mal...',
+              l10n.errorTitle,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
@@ -37,7 +39,7 @@ class LandingErrorView extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'No pudimos cargar la información en este momento. Verifica tu conexión o intenta nuevamente más tarde.',
+              l10n.errorSubtitle,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -53,16 +55,19 @@ class LandingErrorView extends StatelessWidget {
                   context.read<PokemonsBloc>().add(PokemonsStarted());
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF386EEB), // Match blue color
+                  backgroundColor: const Color(0xFF386EEB),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(26),
                   ),
                   elevation: 0,
                 ),
-                child: const Text(
-                  'Reintentar',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                child: Text(
+                  l10n.retry,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),

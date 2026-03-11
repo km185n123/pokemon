@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Private constructor to prevent instantiation
@@ -9,9 +10,7 @@ class AppTheme {
   static const Color _primaryDark = Color(0xFF4F5CFF); // Vibrant purple-blue
 
   static const Color _backgroundLight = Colors.white;
-  static const Color _backgroundDark = Color(
-    0xFF0F1115,
-  ); // Very dark, almost black
+  static const Color _backgroundDark = Color(0xFF0F1115); // Very dark
 
   static const Color _surfaceVariantLight = Color(0xFFE0E0E0);
   static const Color _surfaceVariantDark = Color(0xFF2A2D35);
@@ -30,19 +29,21 @@ class AppTheme {
       onSurface: _onBackgroundLight,
     ),
     scaffoldBackgroundColor: _backgroundLight,
-    textTheme: const TextTheme(
-      headlineMedium: TextStyle(
-        color: _onBackgroundLight,
-        fontWeight: FontWeight.bold,
-      ),
-      labelMedium: TextStyle(
-        color: Colors.grey,
-        letterSpacing: 2,
-        fontWeight: FontWeight.w500,
-      ),
-      labelSmall: TextStyle(
-        color: _onBackgroundLight,
-        fontWeight: FontWeight.bold,
+    textTheme: GoogleFonts.poppinsTextTheme(
+      const TextTheme(
+        headlineMedium: TextStyle(
+          color: _onBackgroundLight,
+          fontWeight: FontWeight.bold,
+        ),
+        labelMedium: TextStyle(
+          color: Colors.grey,
+          letterSpacing: 2,
+          fontWeight: FontWeight.w500,
+        ),
+        labelSmall: TextStyle(
+          color: _onBackgroundLight,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     ),
   );
@@ -58,19 +59,21 @@ class AppTheme {
       onSurface: _onBackgroundDark,
     ),
     scaffoldBackgroundColor: _backgroundDark,
-    textTheme: const TextTheme(
-      headlineMedium: TextStyle(
-        color: _onBackgroundDark,
-        fontWeight: FontWeight.bold,
-      ),
-      labelMedium: TextStyle(
-        color: Colors.white70,
-        letterSpacing: 2,
-        fontWeight: FontWeight.w500,
-      ),
-      labelSmall: TextStyle(
-        color: _onBackgroundDark,
-        fontWeight: FontWeight.bold,
+    textTheme: GoogleFonts.poppinsTextTheme(
+      const TextTheme(
+        headlineMedium: TextStyle(
+          color: _onBackgroundDark,
+          fontWeight: FontWeight.bold,
+        ),
+        labelMedium: TextStyle(
+          color: Colors.white70,
+          letterSpacing: 2,
+          fontWeight: FontWeight.w500,
+        ),
+        labelSmall: TextStyle(
+          color: _onBackgroundDark,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     ),
   );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon/core/config/Constants.dart';
 import 'package:pokemon/core/widgets/feedback/illustration_feedback.dart';
 
 class RegionsScreen extends StatelessWidget {
@@ -18,7 +19,7 @@ class RegionsScreen extends StatelessWidget {
       ),
       body: const Center(
         child: IllustrationFeedback(
-          imageAsset: 'assets/images/coming_soon.png',
+          imageAsset: Constants.comingSoon,
           title: '¡Muy pronto disponible!',
           subtitle:
               'Estamos trabajando para traerte esta\nsección. Vuelve más adelante para descubrir\ntodas las novedades.',
