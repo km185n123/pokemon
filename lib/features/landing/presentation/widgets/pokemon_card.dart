@@ -105,46 +105,44 @@ class _PokemonCardState extends State<PokemonCard> {
         ),
         child: Stack(
           children: [
-            // Pokeball watermark / background accent
+            // Darker background accent
             Positioned(
               right: 0,
               top: 0,
               bottom: 0,
-              width: 140,
+              width: 150,
               child: Container(
                 decoration: BoxDecoration(
                   color: darkerColor,
                   borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(20),
                     bottomRight: Radius.circular(20),
-                    topLeft: Radius.circular(60),
-                    bottomLeft: Radius.circular(60),
+                    topLeft: Radius.circular(20),
+                    bottomLeft: Radius.circular(20),
                   ),
                 ),
               ),
             ),
-            // Light highlight swoosh on the right
+            // Type image watermark / background accent
             Positioned(
               right: 20,
               top: 20,
-              bottom: -20,
+              bottom: -0,
               width: 100,
               child: Transform.rotate(
-                angle: -0.5,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
+                angle: -0.10,
+                child: Image.asset(
+                  'assets/images/Pokedex/${primaryType.toLowerCase()}.png',
+                  color: Colors.white.withValues(alpha: 0.70),
                 ),
               ),
             ),
             // Pokemon Image
             Positioned(
-              right: 16,
-              bottom: 8,
+              right: 35,
+              bottom: 0,
               top: 8,
-              width: 100,
+              width: 70,
               child: Hero(
                 tag: '${widget.heroContext}_pokemon_${widget.pokemon.id}',
                 child: widget.pokemon.image.isNotEmpty
