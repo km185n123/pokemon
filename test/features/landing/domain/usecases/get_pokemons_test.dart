@@ -55,7 +55,7 @@ void main() {
 
     test('should return Left(Failure) when repository call fails', () async {
       // Arrange
-      final tFailure = ServerFailure('error');
+      final tFailure = const ServerFailure('error');
       when(
         () => mockRepository.getPokemons(any()),
       ).thenAnswer((_) async => Left(tFailure));

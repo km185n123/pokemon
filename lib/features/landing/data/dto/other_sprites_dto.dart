@@ -6,9 +6,8 @@ part 'other_sprites_dto.g.dart';
 
 @freezed
 abstract class OtherSpritesDto with _$OtherSpritesDto {
-  const factory OtherSpritesDto({
-    @JsonKey(name: "official-artwork") OfficialArtworkDto? officialArtwork,
-  }) = _OtherSpritesDto;
+  const factory OtherSpritesDto({OfficialArtworkDto? officialArtwork}) =
+      _OtherSpritesDto;
 
   factory OtherSpritesDto.fromJson(Map<String, dynamic> json) =>
       _$OtherSpritesDtoFromJson(json);

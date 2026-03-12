@@ -83,7 +83,7 @@ void main() {
       build: () {
         when(
           () => mockGetFavoritePokemons(),
-        ).thenAnswer((_) async => Left(CacheFailure('cache error')));
+        ).thenAnswer((_) async => const Left(CacheFailure('cache error')));
         return bloc;
       },
       act: (bloc) => bloc.add(FavoritesStarted()),
@@ -119,7 +119,7 @@ void main() {
       build: () {
         when(
           () => mockDeleteFavoritePokemon(any()),
-        ).thenAnswer((_) async => Left(CacheFailure('delete error')));
+        ).thenAnswer((_) async => const Left(CacheFailure('delete error')));
         return bloc;
       },
       act: (bloc) => bloc.add(const FavoritesDeleted(tPokemon)),

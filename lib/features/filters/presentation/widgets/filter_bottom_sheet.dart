@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon/core/config/Constants.dart';
+import 'package:pokemon/core/config/constants.dart';
 import 'package:pokemon/features/filters/presentation/widgets/filter_action_buttons.dart';
 import 'package:pokemon/features/filters/presentation/widgets/filter_sheet_header.dart';
 import 'package:pokemon/features/filters/presentation/widgets/filter_type_checkbox_list.dart';

@@ -92,7 +92,7 @@ void main() {
 
     test('should propagate failure from cacheHandler', () async {
       // Arrange
-      final tFailure = ServerFailure('error');
+      final tFailure = const ServerFailure('error');
       when(
         () => mockProfileRepository.getOfflineDbEnabled(),
       ).thenAnswer((_) async => true);
@@ -147,7 +147,7 @@ void main() {
 
     test('should return Left(Failure) when remote call fails', () async {
       // Arrange
-      final tFailure = ServerFailure('error');
+      final tFailure = const ServerFailure('error');
       when(
         () => mockRemoteService.fetchPokemonDetail(any()),
       ).thenReturn(TaskEither.left(tFailure));

@@ -67,7 +67,7 @@ void main() {
       build: () {
         when(
           () => mockUseCase(any()),
-        ).thenAnswer((_) async => Left(ServerFailure('server error')));
+        ).thenAnswer((_) async => const Left(ServerFailure('server error')));
         return cubit;
       },
       act: (cubit) => cubit.loadPokemonDetail(1),

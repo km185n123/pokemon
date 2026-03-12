@@ -52,7 +52,7 @@ void main() {
 
     test('should return Left(Failure) when repository call fails', () async {
       // Arrange
-      final tFailure = CacheFailure('error');
+      final tFailure = const CacheFailure('error');
       when(
         () => mockRepository.addFavorite(any()),
       ).thenAnswer((_) async => Left(tFailure));
@@ -86,7 +86,7 @@ void main() {
 
     test('should return Left(Failure) when repository call fails', () async {
       // Arrange
-      final tFailure = CacheFailure('error');
+      final tFailure = const CacheFailure('error');
       when(
         () => mockRepository.deleteFavorite(any()),
       ).thenAnswer((_) async => Left(tFailure));
@@ -122,7 +122,7 @@ void main() {
 
     test('should return Left(Failure) when call fails', () async {
       // Arrange
-      final tFailure = CacheFailure('error');
+      final tFailure = const CacheFailure('error');
       when(
         () => mockRepository.getFavoritePokemons(),
       ).thenAnswer((_) async => Left(tFailure));

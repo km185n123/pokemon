@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon/core/config/Constants.dart';
+import 'package:pokemon/core/config/constants.dart';
 
 class FilterTypeCheckboxList extends StatelessWidget {
   final List<String> sortedKeys;

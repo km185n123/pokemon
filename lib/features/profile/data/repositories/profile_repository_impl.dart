@@ -1,4 +1,4 @@
-import 'package:pokemon/core/config/Constants.dart';
+import 'package:pokemon/core/config/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class ProfileRepository {

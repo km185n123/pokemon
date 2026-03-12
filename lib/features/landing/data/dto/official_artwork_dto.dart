@@ -5,9 +5,8 @@ part 'official_artwork_dto.g.dart';
 
 @freezed
 abstract class OfficialArtworkDto with _$OfficialArtworkDto {
-  const factory OfficialArtworkDto({
-    @JsonKey(name: "front_default") String? frontDefault,
-  }) = _OfficialArtworkDto;
+  const factory OfficialArtworkDto({String? frontDefault}) =
+      _OfficialArtworkDto;
 
   factory OfficialArtworkDto.fromJson(Map<String, dynamic> json) =>
       _$OfficialArtworkDtoFromJson(json);

@@ -57,6 +57,7 @@ dependencies:
   connectivity_plus: ^6.1.5
   google_fonts: ^8.0.2
 
+  path: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

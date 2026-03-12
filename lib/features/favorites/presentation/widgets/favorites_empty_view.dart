@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon/core/config/Constants.dart';
+import 'package:pokemon/core/config/constants.dart';
 import 'package:pokemon/core/widgets/feedback/illustration_feedback.dart';
 import 'package:pokemon/l10n/app_localizations.dart';
 

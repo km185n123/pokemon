@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:pokemon/core/database/tables/pokemons_table.dart';
 import 'package:pokemon/core/security/key_derivation.dart';
 
@@ -11,7 +11,7 @@ part 'app_database.g.dart';
 
 @DriftDatabase(tables: [Pokemons])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase(QueryExecutor e) : super(e);
+  AppDatabase(super.e);
 
   @override
   int get schemaVersion => 2;

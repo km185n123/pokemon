@@ -63,7 +63,7 @@ void main() {
 
     test('should return Left(Failure) when call fails', () async {
       // Arrange
-      final tFailure = ServerFailure('error');
+      final tFailure = const ServerFailure('error');
       when(
         () => mockApiClient.request<PokemonListResponseDto>(
           any(),

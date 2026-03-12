@@ -2,8 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokemon/features/profile/data/repositories/profile_repository_impl.dart';
 
-import 'package:equatable/equatable.dart';
-
 class ProfileState extends Equatable {
   final bool isOfflineDbEnabled;
   final bool isLoading;

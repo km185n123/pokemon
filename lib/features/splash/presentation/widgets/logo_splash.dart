@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:lottie/lottie.dart';
-import 'package:pokemon/core/config/Constants.dart';
+import 'package:pokemon/core/config/constants.dart';
 
 class LogoSplash extends StatelessWidget {
   const LogoSplash({super.key});

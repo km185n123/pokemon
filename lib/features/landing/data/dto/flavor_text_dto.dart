@@ -7,7 +7,7 @@ part 'flavor_text_dto.g.dart';
 @freezed
 abstract class FlavorTextDto with _$FlavorTextDto {
   const factory FlavorTextDto({
-    @JsonKey(name: 'flavor_text') required String flavorText,
+    required String flavorText,
     required LanguageDto language,
   }) = _FlavorTextDto;
 

@@ -66,7 +66,7 @@ void main() {
       build: () {
         when(
           () => mockGetPokemons(any()),
-        ).thenAnswer((_) async => Left(ServerFailure('error')));
+        ).thenAnswer((_) async => const Left(ServerFailure('error')));
         return bloc;
       },
       act: (bloc) => bloc.add(PokemonsStarted()),

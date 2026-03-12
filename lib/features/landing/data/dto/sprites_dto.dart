@@ -6,10 +6,8 @@ part 'sprites_dto.g.dart';
 
 @freezed
 abstract class SpritesDto with _$SpritesDto {
-  const factory SpritesDto({
-    @JsonKey(name: "front_default") String? frontDefault,
-    OtherSpritesDto? other,
-  }) = _SpritesDto;
+  const factory SpritesDto({String? frontDefault, OtherSpritesDto? other}) =
+      _SpritesDto;
 
   factory SpritesDto.fromJson(Map<String, dynamic> json) =>
       _$SpritesDtoFromJson(json);

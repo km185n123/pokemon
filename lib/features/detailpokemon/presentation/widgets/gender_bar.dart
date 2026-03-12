@@ -10,10 +10,10 @@ class GenderBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (detail.malePercentage == 0 && detail.femalePercentage == 0) {
-      return Column(
+      return const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Center(
+          Center(
             child: Text(
               'GENERO',
               style: TextStyle(
@@ -24,8 +24,8 @@ class GenderBar extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 8),
-          const Center(
+          SizedBox(height: 8),
+          Center(
             child: Text(
               'Sin género',
               style: TextStyle(fontSize: 14, color: Colors.grey),
