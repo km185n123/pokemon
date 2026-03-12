@@ -2,20 +2,38 @@ name: Flutter CI with FVM
 
 on:
   push:
-    branches: [main, develop]
+    branches:
+      - main
+      - develop
   pull_request:
-    branches: [main, develop]
+    branches:
+      - main
+      - develop
 
 jobs:
   test:
+    name: Run Flutter Tests (FVM)
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      # 1️⃣ Checkout del repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+      # 2️⃣ Configurar Flutter usando FVM
+      - name: Setup Flutter via FVM
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
-          cache: true   # habilita cache de Flutter
+          cache: true
 
-      - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter test
+      # 3️⃣ Instalar dependencias
+      - name: Install dependencies
+        run: fvm flutter pub get
+
+      # 4️⃣ Analizar el proyecto
+      - name: Analyze project
+        run: fvm flutter analyze
+
+      # 5️⃣ Correr tests unitarios
+      - name: Run unit tests
+        run: fvm flutter test
