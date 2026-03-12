@@ -1,68 +1,71 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:pokemon/core/error/failure.dart';
 import 'package:pokemon/features/landing/domain/entities/pokemon.dart';
 import 'package:pokemon/features/landing/domain/repositories/pokemon_repository.dart';
 import 'package:pokemon/features/landing/domain/usecases/get_pokemons.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:fpdart/fpdart.dart';
-import 'package:mocktail/mocktail.dart';
 
 class MockPokemonRepository extends Mock implements PokemonRepository {}
 
 void main() {
-  late GetPokemons usecase;
-  late MockPokemonRepository mockPokemonRepository;
+  late MockPokemonRepository mockRepository;
+  late GetPokemons useCase;
 
   setUp(() {
-    mockPokemonRepository = MockPokemonRepository();
-    usecase = GetPokemons(mockPokemonRepository);
+    mockRepository = MockPokemonRepository();
+    useCase = GetPokemons(mockRepository);
   });
 
-  final tPokemonList = [
-    const Pokemon(
-      id: 1,
-      name: 'bulbasaur',
-      image: 'test.jpg',
-      types: ['grass'],
-    ),
-    const Pokemon(id: 2, name: 'ivysaur', image: 'test2.jpg', types: ['grass']),
+  final tPokemons = [
+    const Pokemon(id: 1, name: 'bulbasaur', image: 'url', types: ['grass']),
   ];
 
-  final tPokemons = tPokemonList;
-
-  test(
-    'should get list of cat breeds from the repository when execution is successful',
-    () async {
+  group('GetPokemons', () {
+    test('should call repository.getPokemons with correct offset', () async {
       // Arrange
+      final tOffset = 10;
       when(
-        () => mockPokemonRepository.getPokemons(),
+        () => mockRepository.getPokemons(any()),
       ).thenAnswer((_) async => Right(tPokemons));
 
       // Act
-      final result = await usecase();
+      await useCase(tOffset);
 
       // Assert
-      result.fold((l) => fail('test failed: $l'), (r) => expect(r, tPokemons));
-      verify(() => mockPokemonRepository.getPokemons()).called(1);
-      verifyNoMoreInteractions(mockPokemonRepository);
-    },
-  );
+      verify(() => mockRepository.getPokemons(tOffset)).called(1);
+    });
 
-  test(
-    'should return a Failure from the repository when execution fails',
-    () async {
+    test(
+      'should return Right(List<Pokemon>) when repository call is successful',
+      () async {
+        // Arrange
+        when(
+          () => mockRepository.getPokemons(any()),
+        ).thenAnswer((_) async => Right(tPokemons));
+
+        // Act
+        final result = await useCase();
+
+        // Assert
+        expect(result, Right(tPokemons));
+        verify(() => mockRepository.getPokemons(0)).called(1);
+      },
+    );
+
+    test('should return Left(Failure) when repository call fails', () async {
       // Arrange
-      const tFailure = ServerFailure('Server Error');
+      final tFailure = ServerFailure('error');
       when(
-        () => mockPokemonRepository.getPokemons(),
+        () => mockRepository.getPokemons(any()),
       ).thenAnswer((_) async => Left(tFailure));
 
       // Act
-      final result = await usecase();
+      final result = await useCase();
 
       // Assert
       expect(result, Left(tFailure));
-      verify(() => mockPokemonRepository.getPokemons()).called(1);
-      verifyNoMoreInteractions(mockPokemonRepository);
-    },
-  );
+      verify(() => mockRepository.getPokemons(0)).called(1);
+    });
+  });
 }
