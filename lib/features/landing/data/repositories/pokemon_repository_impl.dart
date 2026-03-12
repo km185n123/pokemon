@@ -1,10 +1,10 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pokemon/core/base/cache_handler.dart';
 import 'package:pokemon/core/error/failure.dart';
+import 'package:pokemon/core/favorite/data/dao/pokemon_favorite_local_data_source.dart';
 
 import 'package:pokemon/features/landing/data/datasources/pokemon_local_data_source.dart';
 import 'package:pokemon/features/landing/data/services/pokemon_remote_service.dart';
-import 'package:pokemon/features/landing/data/services/pokemon_favorite_service.dart';
 import 'package:pokemon/features/landing/domain/entities/pokemon.dart';
 import 'package:pokemon/features/landing/domain/repositories/pokemon_repository.dart';
 import 'package:pokemon/features/landing/data/mappers/pokemon_mapper.dart';
@@ -14,7 +14,7 @@ import 'package:pokemon/features/profile/data/repositories/profile_repository_im
 
 class PokemonRepositoryImpl implements PokemonRepository {
   final PokemonRemoteService remoteService;
-  final PokemonFavoriteService favoriteService;
+  final PokemonFavoriteLocalDataSource favoriteService;
   final PokemonLocalDataSource localDataSource;
   final CacheHandler cacheHandler;
   final ProfileRepository profileRepository;
@@ -42,7 +42,17 @@ class PokemonRepositoryImpl implements PokemonRepository {
               (dtos) =>
                   dtos.map((d) => PokemonModelMapper(d).toEntity()).toList(),
             )
-            .flatMap(favoriteService.mergeFavorites)
+            .flatMap(
+              (pokemons) => TaskEither.tryCatch(() async {
+                final favorites = await favoriteService.getFavoritePokemons();
+
+                final ids = favorites.map((e) => e.id).toSet();
+
+                return pokemons
+                    .map((p) => p.copyWith(isFavorite: ids.contains(p.id)))
+                    .toList();
+              }, (e, _) => CacheFailure(e.toString())),
+            )
             .run();
       },
       returnCacheOnError: offset == 0,

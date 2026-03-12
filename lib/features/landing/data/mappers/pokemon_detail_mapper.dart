@@ -4,7 +4,6 @@ import 'package:pokemon/features/detailpokemon/domain/entities/pokemon_detail.da
 
 extension PokemonDetailMapper on PokemonDetailDto {
   PokemonDetail toEntity(PokemonSpeciesDto speciesDto) {
-    // Extract Description (first English entry, fallback to any)
     String description = '';
     final flavorTexts = speciesDto.flavorTextEntries;
     if (flavorTexts.isNotEmpty) {
@@ -15,7 +14,6 @@ extension PokemonDetailMapper on PokemonDetailDto {
       description = enEntry.flavorText.replaceAll(RegExp(r'[\n\f]'), ' ');
     }
 
-    // Extract Category (first English entry, fallback to any)
     String category = '';
     final genera = speciesDto.genera;
     if (genera.isNotEmpty) {
@@ -26,12 +24,9 @@ extension PokemonDetailMapper on PokemonDetailDto {
       category = enGenus.genus.replaceAll(' Pokémon', '');
     }
 
-    // Extract Abilities
     final abilityStr = abilities.isNotEmpty
         ? abilities.first.ability.name
         : 'Unknown';
-
-    // Calculate Gender Rates
     double femalePercentage = 0;
     double malePercentage = 0;
 
@@ -41,7 +36,7 @@ extension PokemonDetailMapper on PokemonDetailDto {
     }
 
     final typesList = types.map((e) => e.type.name).toList();
-    final weaknessesList = typesList; // Mocked to actual types for now
+    final weaknessesList = typesList;
 
     final heightMeters = height / 10.0;
     final weightKg = weight / 10.0;
