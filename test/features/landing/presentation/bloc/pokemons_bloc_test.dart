@@ -93,16 +93,25 @@ void main() {
     const tMorePokemons = [pokemon1, pokemon2];
 
     blocTest<PokemonsBloc, PokemonsState>(
-      'emits [PokemonsLoaded(isLoadingMore: true), PokemonsLoaded] when more data is loaded',
+      'emits [PokemonsLoading, PokemonsLoaded, PokemonsLoaded(isLoadingMore: true), PokemonsLoaded] when more data is loaded',
       build: () {
         when(
-          () => mockGetPokemons(any()),
+          () => mockGetPokemons(0),
+        ).thenAnswer((_) async => const Right(tPokemons));
+        when(
+          () => mockGetPokemons(5),
         ).thenAnswer((_) async => const Right(tMorePokemons));
         return bloc;
       },
-      seed: () => const PokemonsLoaded(tPokemons),
-      act: (bloc) => bloc.add(PokemonsLoadMore()),
+      act: (bloc) async {
+        bloc.add(PokemonsStarted());
+        // Wait for the initial load to finish
+        await bloc.stream.firstWhere((state) => state is PokemonsLoaded);
+        bloc.add(PokemonsLoadMore());
+      },
       expect: () => [
+        PokemonsLoading(),
+        const PokemonsLoaded(tPokemons),
         const PokemonsLoaded(tPokemons, isLoadingMore: true),
         const PokemonsLoaded([
           ...tPokemons,
@@ -110,6 +119,7 @@ void main() {
         ], isLoadingMore: false),
       ],
       verify: (_) {
+        verify(() => mockGetPokemons(0)).called(1);
         verify(() => mockGetPokemons(5)).called(1);
       },
     );
