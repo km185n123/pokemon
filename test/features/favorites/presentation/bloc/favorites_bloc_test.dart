@@ -114,7 +114,7 @@ void main() {
       },
     );
 
-    /*blocTest<FavoritesBloc, FavoritesState>(
+    blocTest<FavoritesBloc, FavoritesState>(
       'emits [FavoritesError] when deleting fails',
       build: () {
         when(
@@ -124,6 +124,6 @@ void main() {
       },
       act: (bloc) => bloc.add(const FavoritesDeleted(tPokemon)),
       expect: () => [const FavoritesError(CacheFailure('delete error'))],
-    );*/
+    );
   });
 }

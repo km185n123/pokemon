@@ -61,7 +61,7 @@ void main() {
       },
     );
 
-    /* blocTest<PokemonsBloc, PokemonsState>(
+    blocTest<PokemonsBloc, PokemonsState>(
       'emits [PokemonsLoading, PokemonsError] when unsuccessful',
       build: () {
         when(
@@ -74,7 +74,7 @@ void main() {
         PokemonsLoading(),
         const PokemonsError(ServerFailure('error')),
       ],
-    );*/
+    );
   });
 
   group('PokemonsLoadMore', () {
@@ -82,7 +82,7 @@ void main() {
       Pokemon(id: 2, name: 'ivysaur', image: 'url', types: ['grass']),
     ];
 
-    /*blocTest<PokemonsBloc, PokemonsState>(
+    blocTest<PokemonsBloc, PokemonsState>(
       'emits [PokemonsLoaded(isLoadingMore: true), PokemonsLoaded] when more data is loaded',
       build: () {
         when(
@@ -102,7 +102,7 @@ void main() {
       verify: (_) {
         verify(() => mockGetPokemons(5)).called(1);
       },
-    );*/
+    );
 
     blocTest<PokemonsBloc, PokemonsState>(
       'emits [PokemonsLoaded(isLoadingMore: true), PokemonsLoaded(hasReachedMax: true)] when no more data',

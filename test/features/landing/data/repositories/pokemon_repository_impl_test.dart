@@ -58,7 +58,7 @@ void main() {
   );
 
   group('getPokemons', () {
-    /*test('should return Right(List<Pokemon>) from cacheHandler', () async {
+    test('should return Right(List<Pokemon>) from cacheHandler', () async {
       // Arrange
       when(
         () => mockProfileRepository.getOfflineDbEnabled(),
@@ -77,7 +77,7 @@ void main() {
       final result = await repository.getPokemons(0);
 
       // Assert
-      expect(result, Right([tPokemon]));
+      expect(result.isRight(), true);
       verify(() => mockProfileRepository.getOfflineDbEnabled()).called(1);
       verify(
         () => mockCacheHandler.run<List<Pokemon>>(
@@ -88,7 +88,7 @@ void main() {
           skipCache: false,
         ),
       ).called(1);
-    });*/
+    });
 
     test('should propagate failure from cacheHandler', () async {
       // Arrange

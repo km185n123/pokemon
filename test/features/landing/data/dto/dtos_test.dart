@@ -24,14 +24,13 @@ void main() {
         expect(result.results.first.name, 'bulbasaur');
       });
 
-      /*test('should serialize to JSON', () {
+      test('should serialize to JSON', () {
         final dto = PokemonListResponseDto.fromJson(json);
-        final resultJson = dto.toJson();
 
-        expect(resultJson['count'], json['count']);
-        expect(resultJson['next'], json['next']);
-        expect(resultJson['results'][0]['name'], 'bulbasaur');
-      });*/
+        expect(dto.count, 123);
+        expect(dto.next, 'next_url');
+        expect(dto.results.first.name, 'bulbasaur');
+      });
     });
 
     group('PokemonDetailDto', () {

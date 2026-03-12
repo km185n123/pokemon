@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokemon/features/profile/data/repositories/profile_repository_impl.dart';
 
+import 'package:equatable/equatable.dart';
+
 class ProfileState extends Equatable {
   final bool isOfflineDbEnabled;
   final bool isLoading;
@@ -26,18 +28,17 @@ class ProfileCubit extends Cubit<ProfileState> {
   final ProfileRepository repository;
 
   ProfileCubit(this.repository)
-    : super(ProfileState(isOfflineDbEnabled: true, isLoading: true)) {
-    _loadPreferences();
-  }
+    : super(const ProfileState(isOfflineDbEnabled: true, isLoading: true));
 
-  Future<void> _loadPreferences() async {
-    emit(state.copyWith(isLoading: true));
+  Future<void> init() async {
     final isEnabled = await repository.getOfflineDbEnabled();
+
     emit(state.copyWith(isOfflineDbEnabled: isEnabled, isLoading: false));
   }
 
   Future<void> toggleOfflineDb(bool value) async {
     emit(state.copyWith(isOfflineDbEnabled: value));
+
     await repository.setOfflineDbEnabled(value);
   }
 }
