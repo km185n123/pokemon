@@ -113,18 +113,15 @@ class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
     if (currentState is! PokemonsLoaded) return;
 
     final result = await getFavoritePokemons();
-    result.fold(
-      (failure) => null, // Ignore cache failures on silent refresh
-      (favorites) {
-        final favoriteIds = favorites.map((p) => p.id).toSet();
+    result.fold((failure) => null, (favorites) {
+      final favoriteIds = favorites.map((p) => p.id).toSet();
 
-        _allPokemons = _allPokemons.map((pokemon) {
-          final isFav = favoriteIds.contains(pokemon.id);
-          return pokemon.copyWith(isFavorite: isFav);
-        }).toList();
+      _allPokemons = _allPokemons.map((pokemon) {
+        final isFav = favoriteIds.contains(pokemon.id);
+        return pokemon.copyWith(isFavorite: isFav);
+      }).toList();
 
-        emit(currentState.copyWith(pokemons: _filteredPokemons));
-      },
-    );
+      emit(currentState.copyWith(pokemons: _filteredPokemons));
+    });
   }
 }
