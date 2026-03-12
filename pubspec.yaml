@@ -73,6 +73,7 @@ dev_dependencies:
   mocktail: ^1.0.4
   drift_dev: ^2.32.0
   sqflite_common_ffi: ^2.3.0
+  bloc_test: any
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -117,3 +118,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+dependency_overrides:
+  test_api: 0.7.7
+  bloc_test: ^10.0.0

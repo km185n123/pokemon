@@ -1,11 +1,15 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokemon/features/profile/data/repositories/profile_repository_impl.dart';
 
-class ProfileState {
+class ProfileState extends Equatable {
   final bool isOfflineDbEnabled;
   final bool isLoading;
 
-  ProfileState({required this.isOfflineDbEnabled, this.isLoading = false});
+  const ProfileState({
+    required this.isOfflineDbEnabled,
+    this.isLoading = false,
+  });
 
   ProfileState copyWith({bool? isOfflineDbEnabled, bool? isLoading}) {
     return ProfileState(
@@ -13,6 +17,9 @@ class ProfileState {
       isLoading: isLoading ?? this.isLoading,
     );
   }
+
+  @override
+  List<Object?> get props => [isOfflineDbEnabled, isLoading];
 }
 
 class ProfileCubit extends Cubit<ProfileState> {
