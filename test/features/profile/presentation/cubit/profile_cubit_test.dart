@@ -22,6 +22,7 @@ void main() {
         ).thenAnswer((_) async => false);
         return ProfileCubit(mockRepository);
       },
+      act: (cubit) => cubit.init(),
       expect: () => [
         const ProfileState(isOfflineDbEnabled: false, isLoading: false),
       ],

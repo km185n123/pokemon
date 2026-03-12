@@ -32,7 +32,7 @@ void main() {
 
   group('addFavorite', () {
     test(
-      'should call  localDataSource.addFavorite and return Right(null)',
+      'should call localDataSource.addFavorite and return Right(null)',
       () async {
         // Arrange
         when(
