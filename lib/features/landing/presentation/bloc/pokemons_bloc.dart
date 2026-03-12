@@ -10,6 +10,7 @@ class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
   final GetPokemons getPokemons;
   final GetFavoritePokemons getFavoritePokemons;
 
+  List<Pokemon> _allPokemons = [];
   int _currentOffset = 0;
   List<String> _selectedTypes = [];
   String _currentQuery = '';
@@ -23,8 +24,8 @@ class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
     on<PokemonsRefreshFavorites>(_onRefreshFavorites);
   }
 
-  List<Pokemon> _applyFilters(List<Pokemon> pokemons) {
-    return pokemons.where((pokemon) {
+  List<Pokemon> get _filteredPokemons {
+    return _allPokemons.where((pokemon) {
       final matchesSearch =
           _currentQuery.isEmpty ||
           pokemon.name.toLowerCase().contains(_currentQuery.toLowerCase());
@@ -42,15 +43,13 @@ class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
     Emitter<PokemonsState> emit,
   ) async {
     emit(PokemonsLoading());
-
     _currentOffset = 0;
-
     final result = await getPokemons(_currentOffset);
-
     result.fold((failure) => emit(PokemonsError(failure)), (pokemons) {
+      _allPokemons = pokemons;
       emit(
         PokemonsLoaded(
-          _applyFilters(pokemons),
+          _filteredPokemons,
           hasReachedMax: pokemons.isEmpty,
           selectedTypes: _selectedTypes,
         ),
@@ -62,45 +61,45 @@ class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
     PokemonsLoadMore event,
     Emitter<PokemonsState> emit,
   ) async {
-    if (state is! PokemonsLoaded) return;
+    if (state is PokemonsLoaded) {
+      final currentState = state as PokemonsLoaded;
+      if (currentState.hasReachedMax || currentState.isLoadingMore) return;
 
-    final currentState = state as PokemonsLoaded;
+      emit(currentState.copyWith(isLoadingMore: true));
+      _currentOffset += 5;
 
-    if (currentState.hasReachedMax || currentState.isLoadingMore) return;
-
-    emit(currentState.copyWith(isLoadingMore: true));
-
-    _currentOffset += 5;
-
-    final result = await getPokemons(_currentOffset);
-
-    result.fold((failure) => emit(PokemonsError(failure)), (pokemons) {
-      if (pokemons.isEmpty) {
-        emit(currentState.copyWith(hasReachedMax: true, isLoadingMore: false));
-      } else {
-        final updatedList = List<Pokemon>.from(currentState.pokemons)
-          ..addAll(pokemons);
-
-        emit(
-          PokemonsLoaded(
-            _applyFilters(updatedList),
-            isLoadingMore: false,
-            hasReachedMax: false,
-            selectedTypes: _selectedTypes,
-          ),
-        );
-      }
-    });
+      final result = await getPokemons(_currentOffset);
+      result.fold(
+        (failure) {
+          emit(PokemonsError(failure));
+        },
+        (pokemons) {
+          if (pokemons.isEmpty) {
+            emit(
+              currentState.copyWith(hasReachedMax: true, isLoadingMore: false),
+            );
+          } else {
+            _allPokemons = List.of(_allPokemons)..addAll(pokemons);
+            emit(
+              PokemonsLoaded(
+                _filteredPokemons,
+                isLoadingMore: false,
+                hasReachedMax: false,
+                selectedTypes: _selectedTypes,
+              ),
+            );
+          }
+        },
+      );
+    }
   }
 
   void _onSearch(PokemonsSearch event, Emitter<PokemonsState> emit) {
     if (state is! PokemonsLoaded) return;
-
     _currentQuery = event.query;
-
     final currentState = state as PokemonsLoaded;
 
-    emit(currentState.copyWith(pokemons: _applyFilters(currentState.pokemons)));
+    emit(currentState.copyWith(pokemons: _filteredPokemons));
   }
 
   void _onFilterChanged(
@@ -108,14 +107,12 @@ class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
     Emitter<PokemonsState> emit,
   ) {
     if (state is! PokemonsLoaded) return;
-
     _selectedTypes = event.types;
-
     final currentState = state as PokemonsLoaded;
 
     emit(
       currentState.copyWith(
-        pokemons: _applyFilters(currentState.pokemons),
+        pokemons: _filteredPokemons,
         selectedTypes: _selectedTypes,
       ),
     );
@@ -126,31 +123,38 @@ class PokemonsBloc extends Bloc<PokemonsEvent, PokemonsState> {
     Emitter<PokemonsState> emit,
   ) async {
     if (state is! PokemonsLoaded) return;
-
     final currentState = state as PokemonsLoaded;
 
     final result = await getFavoritePokemons();
+    result.fold(
+      (failure) => null, // Ignore cache failures on silent refresh
+      (favorites) {
+        final favoriteIds = favorites.map((p) => p.id).toSet();
 
-    result.fold((_) {}, (favorites) {
-      final favoriteIds = favorites.map((p) => p.id).toSet();
+        _allPokemons = _allPokemons.map((pokemon) {
+          final isFav = favoriteIds.contains(pokemon.id);
+          if (pokemon.isFavorite != isFav) {
+            return Pokemon(
+              id: pokemon.id,
+              name: pokemon.name,
+              image: pokemon.image,
+              types: pokemon.types,
+              isFavorite: isFav,
+            );
+          }
+          return pokemon;
+        }).toList();
 
-      final updated = currentState.pokemons.map((pokemon) {
-        final isFav = favoriteIds.contains(pokemon.id);
-
-        if (pokemon.isFavorite != isFav) {
-          return Pokemon(
-            id: pokemon.id,
-            name: pokemon.name,
-            image: pokemon.image,
-            types: pokemon.types,
-            isFavorite: isFav,
-          );
-        }
-
-        return pokemon;
-      }).toList();
-
-      emit(currentState.copyWith(pokemons: _applyFilters(updated)));
-    });
+        // Re-emit either the full list or filtered if currently searching
+        emit(
+          PokemonsLoaded(
+            _filteredPokemons,
+            hasReachedMax: currentState.hasReachedMax,
+            isLoadingMore: currentState.isLoadingMore,
+            selectedTypes: _selectedTypes,
+          ),
+        );
+      },
+    );
   }
 }

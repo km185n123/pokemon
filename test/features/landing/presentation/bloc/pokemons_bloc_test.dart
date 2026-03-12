@@ -78,9 +78,19 @@ void main() {
   });
 
   group('PokemonsLoadMore', () {
-    const tMorePokemons = [
-      Pokemon(id: 2, name: 'ivysaur', image: 'url', types: ['grass']),
-    ];
+    const pokemon1 = Pokemon(
+      id: 2,
+      name: 'ivysaur',
+      image: 'url',
+      types: ['grass'],
+    );
+    const pokemon2 = Pokemon(
+      id: 3,
+      name: 'venusaur',
+      image: 'url',
+      types: ['grass'],
+    );
+    const tMorePokemons = [pokemon1, pokemon2];
 
     blocTest<PokemonsBloc, PokemonsState>(
       'emits [PokemonsLoaded(isLoadingMore: true), PokemonsLoaded] when more data is loaded',

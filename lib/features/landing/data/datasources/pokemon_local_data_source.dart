@@ -40,7 +40,9 @@ class PokemonLocalDataSourceImpl implements PokemonLocalDataSource {
 
   @override
   Future<void> clearCache() async {
-    await _db.delete(_db.pokemons).go();
+    await (_db.delete(
+      _db.pokemons,
+    )..where((tbl) => tbl.isFavorite.equals(false))).go();
   }
 }
 
@@ -67,7 +69,7 @@ extension PokemonEntityMapper on domain.Pokemon {
       name: name,
       image: Value(image),
       types: Value(types.join(',')),
-      isFavorite: const Value.absent(),
+      isFavorite: Value(isFavorite),
     );
   }
 
@@ -76,6 +78,7 @@ extension PokemonEntityMapper on domain.Pokemon {
       name: Value(name),
       image: Value(image),
       types: Value(types.join(',')),
+      isFavorite: Value(isFavorite),
     );
   }
 }

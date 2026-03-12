@@ -79,16 +79,19 @@ void main() {
   });
 
   group('clearCache', () {
-    test('should delete all pokemons from database', () async {
+    test('should delete non-favorite pokemons but keep favorites', () async {
       // Arrange
-      await dataSource.cachePokemons([tPokemon]);
+      final favoritePokemon = tPokemon.copyWith(id: 2, isFavorite: true);
+      await dataSource.cachePokemons([tPokemon, favoritePokemon]);
 
       // Act
       await dataSource.clearCache();
 
       // Assert
       final result = await dataSource.getCachedPokemons();
-      expect(result, isEmpty);
+      expect(result, contains(favoritePokemon));
+      expect(result, isNot(contains(tPokemon)));
+      expect(result.length, 1);
     });
   });
 }

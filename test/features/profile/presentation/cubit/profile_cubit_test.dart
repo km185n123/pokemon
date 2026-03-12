@@ -22,7 +22,6 @@ void main() {
         ).thenAnswer((_) async => false);
         return ProfileCubit(mockRepository);
       },
-      act: (cubit) => cubit.init(),
       expect: () => [
         const ProfileState(isOfflineDbEnabled: false, isLoading: false),
       ],
@@ -35,6 +34,10 @@ void main() {
       'should emit new state and save to repository when toggleOfflineDb is called',
       build: () {
         when(
+          () => mockRepository.getOfflineDbEnabled(),
+        ).thenAnswer((_) async => true);
+
+        when(
           () => mockRepository.setOfflineDbEnabled(any()),
         ).thenAnswer((_) async {});
         return ProfileCubit(mockRepository);
@@ -42,6 +45,7 @@ void main() {
       act: (cubit) => cubit.toggleOfflineDb(false),
       expect: () => [
         const ProfileState(isOfflineDbEnabled: false, isLoading: true),
+        const ProfileState(isOfflineDbEnabled: true, isLoading: false),
       ],
       verify: (_) {
         verify(() => mockRepository.setOfflineDbEnabled(false)).called(1);

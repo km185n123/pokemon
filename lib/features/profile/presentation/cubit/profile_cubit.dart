@@ -26,17 +26,18 @@ class ProfileCubit extends Cubit<ProfileState> {
   final ProfileRepository repository;
 
   ProfileCubit(this.repository)
-    : super(const ProfileState(isOfflineDbEnabled: true, isLoading: true));
+    : super(const ProfileState(isOfflineDbEnabled: true, isLoading: true)) {
+    _loadPreferences();
+  }
 
-  Future<void> init() async {
+  Future<void> _loadPreferences() async {
+    emit(state.copyWith(isLoading: true));
     final isEnabled = await repository.getOfflineDbEnabled();
-
     emit(state.copyWith(isOfflineDbEnabled: isEnabled, isLoading: false));
   }
 
   Future<void> toggleOfflineDb(bool value) async {
     emit(state.copyWith(isOfflineDbEnabled: value));
-
     await repository.setOfflineDbEnabled(value);
   }
 }
