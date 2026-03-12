@@ -7,6 +7,14 @@ Architecture**, con un enfoque **feature-first** y aplicando buenas
 prácticas de **persistencia segura, manejo offline, testing y
 arquitectura escalable**.
 
+![WhatsApp Image 2026-03-12 at 2 40 19 PM (3)](https://github.com/user-attachments/assets/65c9e7b5-cc4c-4576-83d5-2f7ce8945385)
+![WhatsApp Image 2026-03-12 at 2 40 19 PM (2)](https://github.com/user-attachments/assets/d9f0b361-f0a1-460b-8959-4d478004ca69)
+![WhatsApp Image 2026-03-12 at 2 40 19 PM (1)](https://github.com/user-attachments/assets/3daa7f3f-00cb-49ec-981f-a7bfe84f4ba1)
+![WhatsApp Image 2026-03-12 at 2 40 19 PM](https://github.com/user-attachments/assets/bc67558a-eae7-493b-8499-ab917bbbb14b)
+![Uploading Captura desde 2026-03-12 14-45-49.png…]()
+
+
+
 ------------------------------------------------------------------------
 
 # 🏗 Arquitectura
@@ -230,6 +238,11 @@ Herramientas:
 ## 4. Ejecutar tests
 
     flutter test
+
+    Nota La configuracion del Futter la puedes resolver con FVM 
+    {
+      "flutter": "3.41.4"
+    }
 
 ------------------------------------------------------------------------
 
