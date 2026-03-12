@@ -1,10 +1,10 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pokemon/core/error/failure.dart';
+import 'package:pokemon/core/favorite/domain/repositories/pokemon_favorite_repository.dart';
 import 'package:pokemon/features/landing/domain/entities/pokemon.dart';
-import 'package:pokemon/features/landing/domain/repositories/pokemon_repository.dart';
 
 class AddFavoritePokemon {
-  final PokemonRepository repository;
+  final PokemonFavoriteRepository repository;
 
   AddFavoritePokemon(this.repository);
 

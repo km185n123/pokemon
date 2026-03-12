@@ -23,9 +23,9 @@ import 'package:pokemon/features/landing/domain/repositories/pokemon_repository.
 import 'package:pokemon/features/profile/data/repositories/profile_repository_impl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pokemon/features/landing/domain/usecases/get_pokemons.dart';
-import 'package:pokemon/features/landing/domain/usecases/add_favorite_pokemon.dart';
-import 'package:pokemon/features/landing/domain/usecases/delete_favorite_pokemon.dart';
-import 'package:pokemon/features/landing/domain/usecases/get_favorite_pokemons.dart';
+import 'package:pokemon/core/favorite/domain/usecases/add_favorite_pokemon.dart';
+import 'package:pokemon/core/favorite/domain/usecases/delete_favorite_pokemon.dart';
+import 'package:pokemon/core/favorite/domain/usecases/get_favorite_pokemons.dart';
 import 'package:pokemon/core/network/dio_client.dart';
 import 'package:pokemon/core/events/tab_event_bus.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_bloc.dart';
@@ -36,6 +36,9 @@ import 'package:pokemon/features/detailpokemon/domain/usecases/get_pokemon_detai
 import 'package:pokemon/features/detailpokemon/presentation/cubit/pokemon_detail_cubit.dart';
 import 'package:pokemon/core/network/network_bloc.dart';
 import 'package:pokemon/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:pokemon/core/favorite/data/dao/pokemon_favorite_local_data_source.dart';
+import 'package:pokemon/core/favorite/domain/repositories/pokemon_favorite_repository.dart';
+import 'package:pokemon/core/favorite/data/repositories/pokemon_favorite_repository_impl.dart';
 
 final getIt = GetIt.instance;
 Future<void> setupServiceLocator(AppConfig config) async {
@@ -114,6 +117,10 @@ Future<void> setupServiceLocator(AppConfig config) async {
     () => PokemonLocalDataSourceImpl(database: getIt<AppDatabase>()),
   );
 
+  getIt.registerLazySingleton<PokemonFavoriteLocalDataSource>(
+    () => PokemonFavoriteLocalDataSourceImpl(database: getIt<AppDatabase>()),
+  );
+
   getIt.registerLazySingleton<PokemonRemoteDataSource>(
     () => PokemonRemoteDataSourceImpl(apiClient: getIt<ApiClient>()),
   );
@@ -127,13 +134,22 @@ Future<void> setupServiceLocator(AppConfig config) async {
   );
 
   getIt.registerLazySingleton<PokemonFavoriteService>(
-    () => PokemonFavoriteService(getIt<PokemonLocalDataSource>()),
+    () => PokemonFavoriteService(getIt<PokemonFavoriteLocalDataSource>()),
   );
 
   // Repository
   getIt.registerLazySingleton<PokemonRepository>(
     () => PokemonRepositoryImpl(
       getIt<PokemonRemoteService>(),
+      getIt<PokemonFavoriteService>(),
+      getIt<PokemonLocalDataSource>(),
+      getIt<CacheHandler>(),
+      getIt<ProfileRepository>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<PokemonFavoriteRepository>(
+    () => PokemonFavoriteRepositoryImpl(
       getIt<PokemonFavoriteService>(),
       getIt<PokemonLocalDataSource>(),
       getIt<CacheHandler>(),

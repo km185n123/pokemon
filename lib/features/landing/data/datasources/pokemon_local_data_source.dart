@@ -1,68 +1,37 @@
+// lib/features/pokemon/data/datasources/pokemon_local_data_source.dart
+
 import 'package:drift/drift.dart';
 import 'package:pokemon/core/database/app_database.dart';
-import 'package:pokemon/features/landing/domain/entities/pokemon.dart';
+import 'package:pokemon/features/landing/domain/entities/pokemon.dart'
+    as domain;
 
-/// Interface for the local data source caching [Pokemon] entities.
 abstract class PokemonLocalDataSource {
-  /// Fetches a list of cached [Pokemon]s from the local database.
-  Future<List<Pokemon>> getCachedPokemons();
-
-  /// Saves a list of [Pokemon]s into the local database.
-  Future<void> cachePokemons(List<Pokemon> pokemons);
-
-  /// Clears all cached [Pokemon]s from the local database.
+  Future<List<domain.Pokemon>> getCachedPokemons();
+  Future<void> cachePokemons(List<domain.Pokemon> pokemons);
   Future<void> clearCache();
-
-  Future<void> addFavorite(Pokemon pokemon);
-  Future<void> deleteFavorite(Pokemon pokemon);
-  Future<List<Pokemon>> getFavoritePokemons();
 }
 
-/// Concrete Drift implementation of [PokemonLocalDataSource].
 class PokemonLocalDataSourceImpl implements PokemonLocalDataSource {
-  final AppDatabase _database;
+  final AppDatabase _db;
 
-  PokemonLocalDataSourceImpl({required AppDatabase database})
-    : _database = database;
+  PokemonLocalDataSourceImpl({required AppDatabase database}) : _db = database;
 
   @override
-  Future<List<Pokemon>> getCachedPokemons() async {
-    final rows = await _database.select(_database.pokemons).get();
-
-    return rows.map((row) {
-      final types = row.types.isNotEmpty ? row.types.split(',') : <String>[];
-
-      return Pokemon(
-        id: row.id,
-        name: row.name,
-        image: row.image ?? '',
-        types: types,
-        isFavorite: row.isFavorite,
-      );
-    }).toList();
+  Future<List<domain.Pokemon>> getCachedPokemons() async {
+    final rows = await _db.select(_db.pokemons).get();
+    return rows.map((e) => e.toDomain()).toList();
   }
 
   @override
-  Future<void> cachePokemons(List<Pokemon> pokemons) async {
-    await _database.batch((batch) {
+  Future<void> cachePokemons(List<domain.Pokemon> pokemons) async {
+    await _db.batch((batch) {
       for (final pokemon in pokemons) {
         batch.insert(
-          _database.pokemons,
-          PokemonsCompanion.insert(
-            id: Value(pokemon.id),
-            name: pokemon.name,
-            image: Value(pokemon.image),
-            types: Value(pokemon.types.join(',')),
-            // Do not override isFavorite unless specified
-            isFavorite: const Value.absent(),
-          ),
+          _db.pokemons,
+          pokemon.toCompanion(),
           onConflict: DoUpdate(
-            (old) => PokemonsCompanion.custom(
-              name: Constant(pokemon.name),
-              image: Constant(pokemon.image),
-              types: Constant(pokemon.types.join(',')),
-            ),
-            target: [_database.pokemons.id],
+            (_) => pokemon.toUpdateCompanion(),
+            target: [_db.pokemons.id],
           ),
         );
       }
@@ -71,41 +40,42 @@ class PokemonLocalDataSourceImpl implements PokemonLocalDataSource {
 
   @override
   Future<void> clearCache() async {
-    // Only delete non-favorites when clearing cache to avoid losing user data.
-    // If we want complete clear, we delete all. But currently the app doesn't call clearCache()
-    await _database.delete(_database.pokemons).go();
+    await _db.delete(_db.pokemons).go();
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                  MAPPERS                                   */
+/* -------------------------------------------------------------------------- */
+
+extension PokemonDriftMapper on PokemonEntity {
+  domain.Pokemon toDomain() {
+    return domain.Pokemon(
+      id: id,
+      name: name,
+      image: image ?? '',
+      types: types.isEmpty ? [] : types.split(','),
+      isFavorite: isFavorite,
+    );
+  }
+}
+
+extension PokemonEntityMapper on domain.Pokemon {
+  PokemonsCompanion toCompanion() {
+    return PokemonsCompanion.insert(
+      id: Value(id),
+      name: name,
+      image: Value(image),
+      types: Value(types.join(',')),
+      isFavorite: const Value.absent(),
+    );
   }
 
-  @override
-  Future<void> addFavorite(Pokemon pokemon) async {
-    await (_database.update(_database.pokemons)
-          ..where((t) => t.id.equals(pokemon.id)))
-        .write(const PokemonsCompanion(isFavorite: Value(true)));
-  }
-
-  @override
-  Future<void> deleteFavorite(Pokemon pokemon) async {
-    await (_database.update(_database.pokemons)
-          ..where((t) => t.id.equals(pokemon.id)))
-        .write(const PokemonsCompanion(isFavorite: Value(false)));
-  }
-
-  @override
-  Future<List<Pokemon>> getFavoritePokemons() async {
-    final rows = await (_database.select(
-      _database.pokemons,
-    )..where((t) => t.isFavorite.equals(true))).get();
-
-    return rows.map((row) {
-      final types = row.types.isNotEmpty ? row.types.split(',') : <String>[];
-
-      return Pokemon(
-        id: row.id,
-        name: row.name,
-        image: row.image ?? '',
-        types: types,
-        isFavorite: row.isFavorite,
-      );
-    }).toList();
+  PokemonsCompanion toUpdateCompanion() {
+    return PokemonsCompanion(
+      name: Value(name),
+      image: Value(image),
+      types: Value(types.join(',')),
+    );
   }
 }

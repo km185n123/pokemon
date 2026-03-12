@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:pokemon/features/landing/domain/entities/pokemon.dart';
 import 'package:pokemon/features/landing/domain/usecases/get_pokemons.dart';
-import 'package:pokemon/features/landing/domain/usecases/get_favorite_pokemons.dart';
+import 'package:pokemon/core/favorite/domain/usecases/get_favorite_pokemons.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_event.dart';
 import 'package:pokemon/features/landing/presentation/bloc/pokemons_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

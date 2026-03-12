@@ -60,21 +60,6 @@ class PokemonRepositoryImpl implements PokemonRepository {
   }
 
   @override
-  Future<Either<Failure, void>> addFavorite(Pokemon pokemon) {
-    return favoriteService.addFavorite(pokemon);
-  }
-
-  @override
-  Future<Either<Failure, void>> deleteFavorite(Pokemon pokemon) {
-    return favoriteService.deleteFavorite(pokemon);
-  }
-
-  @override
-  Future<Either<Failure, List<Pokemon>>> getFavoritePokemons() {
-    return favoriteService.getFavoritePokemons();
-  }
-
-  @override
   Future<Either<Failure, PokemonDetail>> getPokemonDetail(int id) async {
     return remoteService.fetchPokemonDetail(id).map((tuple) {
       final detailDto = tuple.$1;

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokemon/features/landing/domain/usecases/delete_favorite_pokemon.dart';
-import 'package:pokemon/features/landing/domain/usecases/get_favorite_pokemons.dart';
+import 'package:pokemon/core/favorite/domain/usecases/delete_favorite_pokemon.dart';
+import 'package:pokemon/core/favorite/domain/usecases/get_favorite_pokemons.dart';
 import 'favorites_event.dart';
 import 'favorites_state.dart';
 

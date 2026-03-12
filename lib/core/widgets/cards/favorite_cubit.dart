@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokemon/features/landing/domain/entities/pokemon.dart';
-import 'package:pokemon/features/landing/domain/usecases/add_favorite_pokemon.dart';
-import 'package:pokemon/features/landing/domain/usecases/delete_favorite_pokemon.dart';
-import 'package:pokemon/features/landing/domain/usecases/get_favorite_pokemons.dart';
+import 'package:pokemon/core/favorite/domain/usecases/add_favorite_pokemon.dart';
+import 'package:pokemon/core/favorite/domain/usecases/delete_favorite_pokemon.dart';
+import 'package:pokemon/core/favorite/domain/usecases/get_favorite_pokemons.dart';
 import 'favorite_state.dart';
 
 class FavoriteCubit extends Cubit<FavoriteState> {

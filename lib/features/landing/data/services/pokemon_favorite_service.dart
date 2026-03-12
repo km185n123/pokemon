@@ -1,11 +1,11 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pokemon/core/error/failure.dart';
 import 'package:pokemon/core/utils/repository_handler.dart';
-import 'package:pokemon/features/landing/data/datasources/pokemon_local_data_source.dart';
+import 'package:pokemon/core/favorite/data/dao/pokemon_favorite_local_data_source.dart';
 import 'package:pokemon/features/landing/domain/entities/pokemon.dart';
 
 class PokemonFavoriteService {
-  final PokemonLocalDataSource local;
+  final PokemonFavoriteLocalDataSource local;
 
   PokemonFavoriteService(this.local);
 
