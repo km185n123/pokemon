@@ -58,6 +58,7 @@ dependencies:
   google_fonts: ^8.0.2
 
   path: any
+  dart_code_metrics_presets: ^2.29.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
